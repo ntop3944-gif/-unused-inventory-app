@@ -9,4 +9,4 @@ binding = "ASSETS"
 # wrangler kv namespace create TRACKER_KV 실행 후 출력되는 id 값을 아래에 넣어주세요.
 [[kv_namespaces]]
 binding = "TRACKER_KV"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "7512f71ba4ae48c5b13b4d11a2f79fe4"
