@@ -329,6 +329,7 @@ body.locked .topbar, body.locked .main{display:none}
       <div class="tab tab-purple" role="tab" aria-selected="false" onclick="goPg('offbook')">불용재고 · 부외재고</div>
       <div class="tab tab-grey" role="tab" aria-selected="false" onclick="goPg('items')">품목 상세</div>
       <div class="tab tab-navy" role="tab" aria-selected="false" onclick="goPg('history')">이력 · 공유</div>
+      <div class="tab tab-grey" role="tab" aria-selected="false" onclick="goPg('guide')">이용 가이드</div>
     </div>
   </div>
 </div>
@@ -592,6 +593,147 @@ body.locked .topbar, body.locked .main{display:none}
     <div id="histList"></div>
   </div>
   <div class="info" style="margin-top:14px">이력의 "링크" 버튼을 누르면 그 시점 상태를 <b>읽기전용</b>으로 보여주는 공유 URL이 복사됩니다. "불러오기"는 그 시점 상태를 현재(라이브) 화면으로 되돌립니다.</div>
+</div>
+
+<!-- ── 9. 이용 가이드 ── -->
+<div id="pg-guide" class="pg">
+  <div class="ph-desc">성과목표 연계 배경 · 접속정보 · 유관부서 사용법 · 부서별 역할 안내</div>
+
+  <div class="card" style="border-left:4px solid var(--navy);background:var(--blue-l)">
+    <div class="card-ph ph-review">목적</div>
+    <div style="font-size:13px;line-height:1.8">
+      본 대시보드는 <b style="color:var(--red)">불용재고 재활용을 통한 원가절감</b>을 목적으로, 2026년 하반기 통합구매팀 성과목표의 실행수단으로 운영합니다.<br>
+      유관부서 담당자별 접근 권한을 부여한 실시간 공유 · 협의 대시보드를 통해, 영업 · 설계 · 구매 · 생산 · 물류 유관부서가 참여하는 정기 사전검토(부서별 진척 현황 관리) 체계를 가동합니다.<br>
+      불용 발생원인(설계변경 · 호선취소 · 단종)을 분류하고, 처분우선순위 판정에 따른 매각 · 폐기 · 재활용 · 대체사용을 통합구매팀이 주관합니다.<br>
+      <b style="color:var(--red)">2026년 1월 기준 재고와 이후 누적 발생분을 합한 총 불용재고 대비, 2026년 10월까지 사용 누적 재활용률 14% 달성</b>이 목표입니다.
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">전사 관점 기대효과</div>
+    <div class="g3">
+      <div class="card">
+        <div class="card-ph ph-review">원가절감</div>
+        <div style="font-size:12.5px;line-height:1.8;margin-top:6px">대체사용 확정 건은 신규 발주를 억제하여 구매비용을 직접 절감합니다.</div>
+      </div>
+      <div class="card">
+        <div class="card-ph ph-disp">재무 건전성</div>
+        <div style="font-size:12.5px;line-height:1.8;margin-top:6px">불용재고 잔액 축소로 재고자산 건전성을 높이고, 재고회전율(전사 별도 관리지표) 개선에도 함께 기여합니다.</div>
+      </div>
+      <div class="card">
+        <div class="card-ph ph-etc">리스크 저감</div>
+        <div style="font-size:12.5px;line-height:1.8;margin-top:6px">장기보관에 따른 보관비용 · 자산가치 감모 리스크를 조기에 식별하고 해소합니다.</div>
+      </div>
+    </div>
+    <div class="info" style="margin-top:14px">프로세스 표준화 — 유관부서 협업 사전검토 체계를 이번 불용재고 관리에서 정착시켜, 향후 부외재고 등 유사 이슈로 확장 적용할 수 있는 기반을 마련합니다.</div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">접속 링크</div>
+    <div class="card">
+      <div style="font-size:13px;line-height:1.8">
+        대시보드 주소: <a href="https://unused-inventory-app.ntop3944.workers.dev" target="_blank" style="color:var(--blue);font-weight:700">https://unused-inventory-app.ntop3944.workers.dev</a><br>
+        사내메신저 등으로 이 주소를 공유하고, 아래 부서별 계정으로 로그인하도록 안내해 주시기 바랍니다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">유관부서 로그인 정보</div>
+    <div class="card">
+      <table class="rt">
+        <thead><tr><th>부서</th><th>아이디</th><th>비밀번호</th></tr></thead>
+        <tbody>
+          <tr><td><b>영업</b></td><td style="font-family:var(--mono)">sales</td><td style="font-family:var(--mono)">sales2026</td></tr>
+          <tr><td><b>설계</b></td><td style="font-family:var(--mono)">design</td><td style="font-family:var(--mono)">design2026</td></tr>
+          <tr><td><b>구매</b></td><td style="font-family:var(--mono)">purchase</td><td style="font-family:var(--mono)">purchase2026</td></tr>
+          <tr><td><b>생산</b></td><td style="font-family:var(--mono)">production</td><td style="font-family:var(--mono)">production2026</td></tr>
+          <tr><td><b>물류</b></td><td style="font-family:var(--mono)">logistics</td><td style="font-family:var(--mono)">logistics2026</td></tr>
+          <tr><td><b>품질</b></td><td style="font-family:var(--mono)">quality</td><td style="font-family:var(--mono)">quality2026</td></tr>
+        </tbody>
+      </table>
+      <div class="info" style="margin-top:14px">이 계정정보는 Cloudflare KV(auth:users)에 실제로 반영되어야 로그인이 됩니다 — 하단 "관리자 전용 안내"의 계정 반영 방법을 참고해 주시기 바랍니다.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">유관부서 사용법 <span class="sec-tag">STEP BY STEP</span></div>
+    <div class="card">
+      <div style="font-size:13px;line-height:2">
+        <b>1) 로그인</b> — 위 접속 링크로 이동해 본 부서 아이디 · 비밀번호로 로그인합니다.<br>
+        <b>2) 탭 이동</b> — 상단 탭에서 <b>"사전검토 · 이력관리"</b>를 클릭합니다.<br>
+        <b>3) 담당 품목 확인</b> — "즉시처분(최우선) · 처분예정 진행관리"와 "사용검토 진행관리" 목록에서 본 부서 관련 품목을 확인합니다.<br>
+        <b>4) 진행현황 입력</b> — 품목 카드의 담당부서 · 진행현황 · 결과 드롭다운을 본 부서 검토상황에 맞게 선택합니다.<br>
+        <b>5) 검토의견 작성</b> — "검토의견 / 유관부서 합의사항" 입력란에 구체적인 근거(승인도 제출여부, 대체 호선명, 확인필요 사항 등)를 남기고 다른 칸을 클릭하면 자동 저장됩니다.<br>
+        <b>6) 첨부파일(선택)</b> — 승인도 · 회의록 등 근거자료가 있으면 "+ 파일첨부"로 첨부합니다.
+      </div>
+      <div class="info" style="margin-top:14px">별도의 저장 버튼은 없습니다. 입력 후 다른 항목을 클릭하는 순간 자동으로 서버에 저장되며, 화면 우측에 "저장됨" 표시가 잠시 나타납니다.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">진행현황 · 결과값 의미</div>
+    <div class="g3">
+      <div class="card">
+        <div class="card-ph ph-review">진행현황(담당부서 검토단계)</div>
+        <ul style="padding-left:18px;font-size:12.5px;line-height:1.9;margin-top:6px">
+          <li><b>검토요청</b> — 아직 담당부서 검토가 시작되지 않은 상태</li>
+          <li><b>검토중</b> — 담당부서가 대체사용 가능여부 등을 확인 중인 상태</li>
+          <li><b>합의완료</b> — 유관부서 간 처리방향(결과)에 최종 합의된 상태</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-ph ph-disp">결과(처리방향)</div>
+        <ul style="padding-left:18px;font-size:12.5px;line-height:1.9;margin-top:6px">
+          <li><b>미정</b> — 아직 처리방향이 정해지지 않음</li>
+          <li><b>재활용</b> — 타호선 · 타용도로 대체사용 확정</li>
+          <li><b>처분</b> — 매각 또는 폐기로 확정</li>
+          <li><b>보류</b> — 당장 대상이 없거나 추가 확인 필요로 보류</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-ph ph-etc">담당부서 배정 기준</div>
+        <div style="font-size:12.5px;line-height:1.9;margin-top:6px">
+          품목 특성상 1차 검토가 필요한 부서를 기본값으로 배정하되, 검토 과정에서 타 부서로 재배정할 수 있습니다.<br>
+          담당부서 드롭다운에서 언제든 변경 가능합니다.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">부서별 역할(R&amp;R)</div>
+    <div class="card">
+      <table class="rt">
+        <thead><tr><th>부서</th><th>역할</th></tr></thead>
+        <tbody>
+          <tr><td><b>영업</b></td><td>수주 후 장기재고의 호선 적용 가능여부 검토(수주단계 선제검토)</td></tr>
+          <tr><td><b>설계</b></td><td>수주 후 호선 적용 가능여부 검토, 승인도 반영 및 설계변경 협업</td></tr>
+          <tr><td><b>구매</b></td><td>원재료 · 구매품(VALVE/DAMPER류 등) 적용검토 주관, 기발주건 · 발주예정건 대상</td></tr>
+          <tr><td><b>생산</b></td><td>분해작업 진행, 제작품 사용 시 플러싱 수행(현장 재활용 작업)</td></tr>
+          <tr><td><b>물류</b></td><td>완제품 관리, 사용 시 포장해체 · 재포장 수행</td></tr>
+          <tr><td><b>품질</b></td><td>재활용 사용 확정 시 검사 주관</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">관리자(통합구매팀) 전용 안내 <span class="sec-tag">참고용 — 필요 시에만 펼쳐보기</span></div>
+    <div class="card">
+      <details id="adminGuideDetails">
+        <summary style="cursor:pointer;font-size:12.5px;color:var(--navy);font-weight:700">계정 반영 · 월별 데이터 갱신 · 배포 절차 펼쳐보기</summary>
+        <div style="font-size:12.5px;line-height:2;margin-top:12px;color:var(--text2)">
+          <b>0) 유관부서 계정 반영</b> — Cloudflare 대시보드 → Storage &amp; Databases → KV → TRACKER_KV → "KV 쌍" 탭 → auth:users 키 검색 → 편집 → 위 표의 6개 부서 계정을 포함한 전체 내용으로 교체 후 저장합니다.<br>
+          <b>1) 월별 원자료 취합</b> — 매월 신규 불용재고 현황 엑셀을 통합구매팀이 준비합니다.<br>
+          <b>2) 데이터 갱신</b> — 신규 자료를 기준으로 대시보드의 품목 · KPI · 등급 데이터를 갱신합니다.<br>
+          <b>3) GitHub 반영</b> — 갱신된 index.html 전체 내용을 GitHub 저장소(public/index.html) 편집화면에서 전체 교체(Ctrl+A → 붙여넣기) 후 커밋합니다.<br>
+          <b>4) 자동배포 확인</b> — 커밋 후 약 1분 내 Cloudflare가 자동배포하며, 실제 화면에서 반영 여부를 확인합니다.<br>
+          <b>5) 계정 관리</b> — 계정 추가 · 비밀번호 변경이 필요하면 0)과 동일한 방법으로 auth:users 값을 다시 교체합니다.
+        </div>
+      </details>
+    </div>
+  </div>
 </div>
 
 <div class="card" style="margin-top:30px;background:var(--surface2);border:none">
