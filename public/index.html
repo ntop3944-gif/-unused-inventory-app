@@ -159,6 +159,10 @@ input[type=text]{flex:1;min-width:180px}
 .tp-row:last-child{border-bottom:none}
 .tp-head{color:var(--text3);font-size:11.3px;font-family:var(--mono);text-transform:uppercase;font-weight:700}
 .tp-num{font-family:var(--mono);text-align:center;color:var(--text)}
+.tp-row-d{display:grid;grid-template-columns:56px 1fr 1fr 1fr 110px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--surface2);font-size:12.3px}
+.tp-row-d:last-child{border-bottom:none}
+.tp-row-d .tp-num{font-family:var(--mono);text-align:center;color:var(--text)}
+.tp-amt-cell{font-family:var(--mono);text-align:right;color:var(--text)}
 
 /* ---- 월별 재활용 품목 내역 ---- */
 .mo-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:12px;margin-bottom:8px;overflow:hidden;box-shadow:var(--shadow)}
@@ -508,6 +512,31 @@ body.locked .topbar, body.locked .main{display:none}
     <div>이 페이지의 <b>담당부서·진행현황·검토의견</b>은 이 파일을 여는 모든 사람에게 공유되어 저장됩니다(팀 공용). 변경 즉시 자동 저장됩니다. <span id="storageWarn"></span></div>
   </div>
 
+  <div class="info" style="margin-bottom:12px">
+    <b>진행현황</b> — 검토요청(미착수) → 검토중(담당부서 확인중) → 합의완료(유관부서 합의완료) &nbsp;|&nbsp;
+    <b>결과</b> — 미정(처리방향 미정) / 재활용(대체사용 확정) / 처분(매각·폐기 확정) / 보류(대상없음·추가확인 필요)
+  </div>
+
+  <div class="card" style="margin-bottom:14px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-size:12.5px">
+    <div style="display:flex;align-items:center;gap:6px">
+      <label style="color:var(--text3)">부서 필터</label>
+      <select id="deptFilterSel" style="font-size:12.5px;padding:4px 8px;border-radius:6px;border:1px solid var(--surface2)">
+        <option value="all">전체</option>
+        <option value="설계">설계</option>
+        <option value="구매">구매</option>
+        <option value="영업">영업</option>
+        <option value="생산">생산</option>
+        <option value="물류">물류</option>
+        <option value="품질">품질</option>
+      </select>
+    </div>
+    <label style="display:flex;align-items:center;gap:5px;color:var(--text3);cursor:pointer">
+      <input type="checkbox" id="delayedOnlyChk"> 지연 항목만 보기
+    </label>
+    <span id="filterSummary" style="color:var(--text3)"></span>
+    <button id="exportCsvBtn" style="margin-left:auto;font-size:12px;padding:6px 12px;border-radius:6px;border:1px solid var(--blue);background:#fff;color:var(--blue);cursor:pointer">이력 내보내기(CSV)</button>
+  </div>
+
   <div class="g3" id="issueMeta"></div>
 
   <div class="sec">
@@ -519,6 +548,16 @@ body.locked .topbar, body.locked .main{display:none}
   <div class="sec">
     <div class="sec-t">월별 처리 실적 <span class="sec-tag">트래커 변경이력 기준 — 사용이 쌓일수록 채워집니다</span></div>
     <div class="card"><div id="throughput"></div></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">부서별 진행 현황(스냅샷) <span class="sec-tag">현재 담당부서 배정 기준</span></div>
+    <div class="card"><div id="deptStats"></div></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">데이터 정합성 체크 <span class="sec-tag">트래커 재활용 확정 ↔ KPI 집계 데이터셋 비교</span></div>
+    <div id="consistencyCheck"></div>
   </div>
 
   <div class="sec">
@@ -791,6 +830,7 @@ async function doLogin(){
     document.getElementById('loginMask').classList.add('hide');
     document.body.classList.remove('locked');
     renderUserChip();
+    applyMyDeptDefaultFilter();
   }catch(e){
     errEl.textContent = e.message || '로그인에 실패했습니다.';
   }
@@ -813,6 +853,7 @@ async function initAuth(){
       document.getElementById('loginMask').classList.add('hide');
       document.body.classList.remove('locked');
       renderUserChip();
+      applyMyDeptDefaultFilter();
       return;
     }
   }catch(e){}
@@ -1160,6 +1201,22 @@ let storageOK = true;
 const DEPTS = ['설계','구매','영업','생산','물류','품질'];
 const PROGRESS = ['검토요청','검토중','합의완료'];
 const RESULTS = ['미정','재활용','처분','보류'];
+const DEPT_BY_ACCOUNT = {sales:'영업', design:'설계', purchase:'구매', production:'생산', logistics:'물류', quality:'품질'};
+let DEPT_FILTER = 'all';
+let DELAYED_ONLY = false;
+let EXPANDED_LOGS = new Set();
+function applyMyDeptDefaultFilter(){
+  try{
+    if(!CURRENT_USER) return;
+    const myDept = DEPT_BY_ACCOUNT[CURRENT_USER.id];
+    if(myDept && DEPT_FILTER==='all'){
+      DEPT_FILTER = myDept;
+      const sel = document.getElementById('deptFilterSel');
+      if(sel) sel.value = myDept;
+    }
+    if(typeof renderTrackers==='function') renderTrackers();
+  }catch(e){}
+}
 // 2026년 7월 장기보관 재고 회의록(BWTS/SPARE) 반영 — 트래커에 기존 값이 없는 품목에만 최초 1회 적용
 const SEED_TRACK = [{"uid": "item-084", "dept": "설계", "progress": "검토중", "result": "미정", "note": "[7월 BWTS 재고회의] 26.05-E251301(27.01) 승인도 제출(승인계획 26.09 이후 승인여부 확인가능)"}, {"uid": "item-097", "dept": "설계", "progress": "검토중", "result": "미정", "note": "[7월 BWTS 재고회의] 26.02-H3596(26.11) 승인도 제출(승인계획 26.08 이후 승인여부 확인가능)"}, {"uid": "item-102", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-098", "dept": "설계", "progress": "검토중", "result": "미정", "note": "[7월 BWTS 재고회의] 26.02-NDY2009(27.07) 승인도 제출, 26.07-E251301(27.01)로 사용처 변경(승인계획 9월 이후 확인가능)"}, {"uid": "item-176", "dept": "설계", "progress": "검토중", "result": "미정", "note": "[7월 BWTS 재고회의] 26.02-NDY2009(27.07) 승인도 제출(승인계획 27년 04월 이후 확인가능)"}, {"uid": "item-103", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-058", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-109", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-167", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-006", "dept": "설계", "progress": "검토중", "result": "미정", "note": "[7월 BWTS 재고회의] 26.07-DH317 승인도 제출"}, {"uid": "item-007", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-008", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-009", "dept": "설계", "progress": "검토중", "result": "미정", "note": "[7월 BWTS 재고회의] 26.07-RETROFIT(장성민프로) 적용 검토"}, {"uid": "item-128", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-076", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-077", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-078", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-079", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-094", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-101", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-108", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-113", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-133", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-087", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-092", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-104", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-110", "dept": "설계", "progress": "합의완료", "result": "보류", "note": "[7월 BWTS 재고회의] 26.07-검토 대상 없음"}, {"uid": "item-073", "dept": "구매", "progress": "합의완료", "result": "재활용", "note": "[7월 SPARE 재고회의] 26.07-발생 시 즉시 사용 가능 (선박관리사 변경으로 취소)"}, {"uid": "item-074", "dept": "구매", "progress": "검토중", "result": "미정", "note": "[7월 SPARE 재고회의] 선박관리사 변경으로 취소, HOSE류 10M"}, {"uid": "item-075", "dept": "구매", "progress": "검토중", "result": "미정", "note": "[7월 SPARE 재고회의] 선박관리사 변경으로 취소, HOSE류 10M"}, {"uid": "item-080", "dept": "구매", "progress": "검토중", "result": "미정", "note": "[7월 SPARE 재고회의] 장기 보관으로 인한 취소, 2 BAR 25M"}, {"uid": "item-081", "dept": "구매", "progress": "검토중", "result": "미정", "note": "[7월 SPARE 재고회의] 장기 보관으로 인한 취소, 2 BAR 18M"}, {"uid": "item-082", "dept": "구매", "progress": "검토중", "result": "미정", "note": "[7월 SPARE 재고회의] 납기문제(선수금)로 취소, 2 BAR 30M"}, {"uid": "item-083", "dept": "구매", "progress": "합의완료", "result": "재활용", "note": "[7월 SPARE 재고회의] 고객사 취소요청, 26.07-발생 시 즉시 사용 가능"}, {"uid": "item-085", "dept": "구매", "progress": "검토중", "result": "미정", "note": "[7월 SPARE 재고회의] 선주측 선박판매, 도면 확인 필요"}, {"uid": "item-086", "dept": "구매", "progress": "합의완료", "result": "재활용", "note": "[7월 SPARE 재고회의] 고객사 취소요청, 26.07-발생 시 즉시 사용 가능"}, {"uid": "item-087", "dept": "구매", "progress": "검토중", "result": "미정", "note": "[7월 SPARE 재고회의] 선주측 오발주, 도면 확인 필요"}, {"uid": "item-088", "dept": "구매", "progress": "검토중", "result": "미정", "note": "[7월 SPARE 재고회의] 선주측 선박 판매, 10BAR 5M*2EA/10BAR 10M"}, {"uid": "item-089", "dept": "구매", "progress": "검토중", "result": "미정", "note": "[7월 SPARE 재고회의] 선박운용 계획 변경, 도면 확인 필요"}, {"uid": "item-090", "dept": "구매", "progress": "검토중", "result": "미정", "note": "[7월 SPARE 재고회의] 고객사 취소요청, 14BAR 길이 확인 필요"}, {"uid": "item-091", "dept": "구매", "progress": "합의완료", "result": "재활용", "note": "[7월 SPARE 재고회의] 고객사 취소요청, 26.07-발생 시 즉시 사용 가능"}, {"uid": "item-092", "dept": "구매", "progress": "검토중", "result": "미정", "note": "[7월 SPARE 재고회의] 고객사 요청, 도면 확인 필요"}, {"uid": "item-093", "dept": "구매", "progress": "검토중", "result": "미정", "note": "[7월 SPARE 재고회의] 고객사 취소요청"}, {"uid": "item-096", "dept": "구매", "progress": "합의완료", "result": "재활용", "note": "[7월 SPARE 재고회의] 납기문제(선수금), 26.07-발생 시 즉시 사용 가능"}, {"uid": "item-100", "dept": "구매", "progress": "합의완료", "result": "재활용", "note": "[7월 SPARE 재고회의] 고객사 요청, 4BAR, 26.07-발생 시 즉시 사용 가능"}, {"uid": "item-106", "dept": "구매", "progress": "합의완료", "result": "재활용", "note": "[7월 SPARE 재고회의] 고객사 취소요청, 26.07-발생 시 즉시 사용 가능"}, {"uid": "item-107", "dept": "구매", "progress": "합의완료", "result": "재활용", "note": "[7월 SPARE 재고회의] 중복 발주(무상), 26.07-발생 시 즉시 사용 가능"}, {"uid": "item-112", "dept": "구매", "progress": "검토중", "result": "미정", "note": "[7월 SPARE 재고회의] 고객사 취소요청 — 데이터 오류 가능성 확인 필요"}, {"uid": "item-115", "dept": "구매", "progress": "합의완료", "result": "재활용", "note": "[7월 SPARE 재고회의] 고객사 취소요청, 26.07-발생 시 즉시 사용 가능"}, {"uid": "item-118", "dept": "구매", "progress": "합의완료", "result": "재활용", "note": "[7월 SPARE 재고회의] 고객사 취소요청, 26.07-발생 시 즉시 사용 가능"}, {"uid": "item-125", "dept": "구매", "progress": "합의완료", "result": "재활용", "note": "[7월 SPARE 재고회의] 납기문제(선수금), 26.07-발생 시 즉시 사용 가능"}, {"uid": "item-131", "dept": "구매", "progress": "합의완료", "result": "재활용", "note": "[7월 SPARE 재고회의] 납기문제(선수금), 26.07-발생 시 즉시 사용 가능"}, {"uid": "item-166", "dept": "구매", "progress": "검토중", "result": "미정", "note": "[7월 SPARE 재고회의] 고객사 취소요청, 14BAR 2M"}, {"uid": "item-170", "dept": "구매", "progress": "합의완료", "result": "재활용", "note": "[7월 SPARE 재고회의] 고객사 취소요청, 26.07-발생 시 즉시 사용 가능"}, {"uid": "item-172", "dept": "구매", "progress": "합의완료", "result": "재활용", "note": "[7월 SPARE 재고회의] 고객사 취소요청, 26.07-발생 시 즉시 사용 가능"}, {"uid": "item-178", "dept": "구매", "progress": "합의완료", "result": "재활용", "note": "[7월 SPARE 재고회의] 고객사 취소요청, 26.07-발생 시 즉시 사용 가능"}];
 const SEED_MEETING_DATE = '2026-07-24';
@@ -1205,11 +1262,23 @@ function ageInfo(t){
   if(days<=14) return {label:days+'일째 정체', cls:'age-warn'};
   return {label:days+'일째 정체', cls:'age-late'};
 }
+function canDeleteLogEntry(l){
+  if(READONLY || !CURRENT_USER) return false;
+  if(CURRENT_USER.role==='admin') return true;
+  return !!(l.editorId && l.editorId===CURRENT_USER.id);
+}
 function trackerRow(i){
   const key = itemKey(i);
   const t = trackState(i);
   const log = t.log || [];
-  const logHtml = log.slice(-3).reverse().map(l=>`<div style="color:var(--text3)">· ${l.at} — <b>${l.editor}</b> ${l.summary}</div>`).join('');
+  const expanded = EXPANDED_LOGS.has(key);
+  const withIdx = log.map((l, idx)=>Object.assign({}, l, {_idx: idx}));
+  const shown = expanded ? withIdx.slice().reverse() : withIdx.slice(-3).reverse();
+  const logHtml = shown.map(l=>`<div style="color:var(--text3);display:flex;justify-content:space-between;gap:6px;align-items:flex-start">
+      <span>· ${l.at} — <b>${l.editor}</b> ${l.summary}</span>
+      ${canDeleteLogEntry(l)?`<span class="tk-log-del" data-log-key="${key}" data-log-idx="${l._idx}" title="이 이력 삭제" style="cursor:pointer;color:var(--red);flex-shrink:0">&#10005;</span>`:''}
+    </div>`).join('');
+  const moreHtml = log.length>3 ? `<div data-log-toggle="${key}" style="cursor:pointer;color:var(--blue);font-size:11px;margin-top:2px">${expanded?'접기':'전체 이력 보기 ('+log.length+'건)'}</div>` : '';
   const age = ageInfo(t);
   return `<div class="tk-card" data-key="${key}">
     <div class="tk-top">
@@ -1226,7 +1295,7 @@ function trackerRow(i){
       <input type="text" class="tk-note-i" placeholder="검토의견 / 유관부서 합의사항" value="${t.note||''}">
     </div>
     <div class="tk-meta">${t.updatedAt? '최종 업데이트: '+t.updatedAt+(t.lastEditor? ' ('+t.lastEditor+')':'') : '아직 업데이트 없음'} <span class="tk-savebadge">저장됨</span>
-      ${logHtml? `<div style="margin-top:4px">${logHtml}</div>`:''}
+      ${logHtml? `<div style="margin-top:4px">${logHtml}${moreHtml}</div>`:''}
     </div>
     <div class="tk-attach" data-attach-key="${key}">
       <div class="tk-attach-list" data-attach-list="${key}"></div>
@@ -1245,13 +1314,87 @@ function sortForTracker(list){
     return b.amount-a.amount;
   });
 }
+function filteredTrackerList(list){
+  let l = list;
+  if(DEPT_FILTER!=='all') l = l.filter(i=> trackState(i).dept === DEPT_FILTER);
+  if(DELAYED_ONLY) l = l.filter(i=>{ const a = ageInfo(trackState(i)); return a.cls==='age-warn'||a.cls==='age-late'; });
+  return l;
+}
+function renderFilterSummary(dispTotal, dispShown, reviewTotal, reviewShown){
+  const el = document.getElementById('filterSummary');
+  if(!el) return;
+  if(DEPT_FILTER==='all' && !DELAYED_ONLY){ el.textContent = ''; return; }
+  el.textContent = `필터 적용중 — 처분관리 ${dispShown}/${dispTotal}건, 사용검토 ${reviewShown}/${reviewTotal}건 표시`;
+}
 function renderTrackers(){
-  document.getElementById('dispTracker').innerHTML = sortForTracker(disp).slice(0,15).map(trackerRow).join('');
-  document.getElementById('reviewTracker').innerHTML = sortForTracker(review).slice(0,40).map(trackerRow).join('');
+  const dispSorted = sortForTracker(disp);
+  const reviewSorted = sortForTracker(review);
+  const dispF = filteredTrackerList(dispSorted);
+  const reviewF = filteredTrackerList(reviewSorted);
+  document.getElementById('dispTracker').innerHTML = dispF.slice(0,15).map(trackerRow).join('');
+  document.getElementById('reviewTracker').innerHTML = reviewF.slice(0,40).map(trackerRow).join('');
+  renderFilterSummary(dispSorted.length, dispF.length, reviewSorted.length, reviewF.length);
   renderKanban();
   renderThroughput();
+  renderDeptStats();
+  renderConsistencyCheck();
   attachTrackerEvents();
   initAttachments();
+}
+function renderDeptStats(){
+  const el = document.getElementById('deptStats');
+  if(!el) return;
+  const all = [...new Map(disp.concat(review).map(i=>[itemKey(i), i])).values()];
+  const stats = {};
+  DEPTS.forEach(d=> stats[d] = {검토요청:0, 검토중:0, 합의완료:0, amount:0});
+  all.forEach(i=>{
+    const t = trackState(i);
+    if(!stats[t.dept]) stats[t.dept] = {검토요청:0, 검토중:0, 합의완료:0, amount:0};
+    stats[t.dept][t.progress] = (stats[t.dept][t.progress]||0)+1;
+    stats[t.dept].amount += i.amount;
+  });
+  el.innerHTML = `<div class="tp-row-d tp-head"><div>부서</div><div>검토요청</div><div>검토중</div><div>합의완료</div><div>담당 금액</div></div>
+    ${DEPTS.map(d=>{
+      const s = stats[d]||{검토요청:0,검토중:0,합의완료:0,amount:0};
+      return `<div class="tp-row-d"><div>${d}</div><div class="tp-num">${s.검토요청||0}</div><div class="tp-num">${s.검토중||0}</div><div class="tp-num" style="color:var(--teal);font-weight:600">${s.합의완료||0}</div><div class="tp-amt-cell">${won(s.amount)}</div></div>`;
+    }).join('')}`;
+}
+function renderConsistencyCheck(){
+  const el = document.getElementById('consistencyCheck');
+  if(!el) return;
+  const all = [...new Map(disp.concat(review).map(i=>[itemKey(i), i])).values()];
+  const mismatched = all.filter(i=>{
+    const t = trackState(i);
+    return t.result === '재활용' && i.grade !== '사용';
+  });
+  if(mismatched.length===0){
+    el.innerHTML = `<div class="info" style="color:var(--teal)">트래커상 "재활용" 확정 품목과 데이터셋 반영 상태가 모두 일치합니다.</div>`;
+  } else {
+    el.innerHTML = `<div class="info" style="border-color:var(--amber);color:var(--amber)">
+      <b>정합성 확인 필요</b> — 트래커에서 "재활용"으로 확정되었으나 KPI 집계용 데이터셋에는 아직 반영되지 않은 품목 ${mismatched.length}건이 있습니다. 다음 월별 데이터 업데이트 시 반영이 필요합니다.
+      <ul style="margin-top:6px;padding-left:18px">
+        ${mismatched.map(i=>`<li>${i.group} · ${i.name} (${won(i.amount)})</li>`).join('')}
+      </ul>
+    </div>`;
+  }
+}
+function exportTrackerCSV(){
+  const all = [...new Map(disp.concat(review).map(i=>[itemKey(i), i])).values()];
+  const rows = [['구분','품목그룹','품목명','호선','수주번호','금액','담당부서','진행현황','결과','검토의견','최종수정일시','최종수정자']];
+  all.forEach(i=>{
+    const t = trackState(i);
+    rows.push([i.priorityGrade||'', i.group||'', i.name||'', i.vessel||'', i.orderNo||'', i.amount||0, t.dept||'', t.progress||'', t.result||'', (t.note||'').replace(/\n/g,' '), t.updatedAt||'', t.lastEditor||'']);
+  });
+  const csv = rows.map(r=>r.map(v=>{
+    const s = String(v==null?'':v);
+    return /["\n,]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+  }).join(',')).join('\r\n');
+  const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `불용재고_사전검토이력_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
 }
 
 // ---- 칸반보드 ----
@@ -1317,24 +1460,58 @@ function attachTrackerEvents(){
           res = card.querySelector('.tk-result'), note = card.querySelector('.tk-note-i');
     const badge = card.querySelector('.tk-savebadge');
     if(READONLY){ [dept,prog,res,note].forEach(el=>{ if(el) el.disabled = true; }); return; }
+    let committing = false;
     async function commit(fieldLabel, field, value){
-      const editor = getEditorName();
       const prev = TRACK[key] || {};
-      const log = prev.log || [];
-      const nowISO = new Date().toISOString();
-      log.push({editor, at:new Date().toLocaleString('ko-KR'), atISO:nowISO, summary:`${fieldLabel} → ${value}`, field, value});
-      TRACK[key] = {dept:dept.value, progress:prog.value, result:res.value, note:note.value,
-        updatedAt:new Date().toLocaleString('ko-KR'), updatedAtISO:nowISO, lastEditor:editor, log:log.slice(-15)};
-      await saveTracker();
-      badge.classList.add('show'); setTimeout(()=>badge.classList.remove('show'), 1500);
-      renderTrackers();
+      // 값이 실제로 바뀌지 않았으면 저장·이력기록을 건너뜀 (재렌더 중 blur 재발생 등으로 인한 중복 로그 방지)
+      if(prev[field] === value) return;
+      if(committing) return;
+      committing = true;
+      try{
+        const editor = getEditorName();
+        const editorId = CURRENT_USER ? CURRENT_USER.id : null;
+        const log = prev.log || [];
+        const nowISO = new Date().toISOString();
+        log.push({editor, editorId, at:new Date().toLocaleString('ko-KR'), atISO:nowISO, summary:`${fieldLabel} → ${value}`, field, value});
+        TRACK[key] = {dept:dept.value, progress:prog.value, result:res.value, note:note.value,
+          updatedAt:new Date().toLocaleString('ko-KR'), updatedAtISO:nowISO, lastEditor:editor, log:log.slice(-30)};
+        await saveTracker();
+        badge.classList.add('show'); setTimeout(()=>badge.classList.remove('show'), 1500);
+        renderTrackers();
+      } finally { committing = false; }
     }
     dept.addEventListener('change', ()=>commit('담당부서','dept',dept.value));
     prog.addEventListener('change', ()=>commit('진행현황','progress',prog.value));
     res.addEventListener('change', ()=>commit('결과','result',res.value));
     note.addEventListener('blur', ()=>commit('검토의견','note',note.value));
   });
+  document.querySelectorAll('.tk-log-del').forEach(el=>{
+    el.addEventListener('click', async ()=>{
+      const key = el.getAttribute('data-log-key');
+      const idx = parseInt(el.getAttribute('data-log-idx'), 10);
+      const t = TRACK[key];
+      if(!t || !Array.isArray(t.log) || isNaN(idx)) return;
+      t.log.splice(idx, 1);
+      await saveTracker();
+      renderTrackers();
+    });
+  });
+  document.querySelectorAll('[data-log-toggle]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const key = el.getAttribute('data-log-toggle');
+      if(EXPANDED_LOGS.has(key)) EXPANDED_LOGS.delete(key); else EXPANDED_LOGS.add(key);
+      renderTrackers();
+    });
+  });
 }
+(function wireTrackerFilterControls(){
+  const sel = document.getElementById('deptFilterSel');
+  const chk = document.getElementById('delayedOnlyChk');
+  const btn = document.getElementById('exportCsvBtn');
+  if(sel) sel.addEventListener('change', e=>{ DEPT_FILTER = e.target.value; renderTrackers(); });
+  if(chk) chk.addEventListener('change', e=>{ DELAYED_ONLY = e.target.checked; renderTrackers(); });
+  if(btn) btn.addEventListener('click', exportTrackerCSV);
+})();
 loadTracker();
 
 // ============ 첨부파일 ============
