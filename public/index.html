@@ -1266,14 +1266,15 @@ const agedTotal = (yb['4년차(처분대상)']?.amount||0) + (yb['예외(재검�
 document.getElementById('agedTxt').textContent = `${wonShort(agedTotal)} (${(agedTotal/k.total*100).toFixed(1)}%)`;
 
 // ============ Cause analysis ============
-const top4amt = DATA.prod_cause.slice(0,4).reduce((s,c)=>s+c.amount,0);
-document.getElementById('prodCauseTop4').textContent = `상위 4개 원인이 전체의 ${(top4amt/DATA.type_amt['제품']*100).toFixed(1)}%`;
-renderCollapsibleBars('prodCauseBars', DATA.prod_cause.map(c=>({name:c.name,amount:c.amount,count:c.count})), (r)=>{
+const prodCauseSorted = [...DATA.prod_cause].sort((a,b)=>b.amount-a.amount);
+const top3amt = prodCauseSorted.slice(0,3).reduce((s,c)=>s+c.amount,0);
+document.getElementById('prodCauseTop4').textContent = `상위 3개 원인이 전체의 ${(top3amt/DATA.type_amt['제품']*100).toFixed(1)}%`;
+renderCollapsibleBars('prodCauseBars', prodCauseSorted.map(c=>({name:c.name,amount:c.amount,count:c.count})), (r)=>{
   const i = DATA.prod_cause.findIndex(c=>c.name===r.name);
   return [COLORS.red,COLORS.amber,COLORS.blueM,COLORS.purple][i%4] || COLORS.grey;
 }, DATA.type_amt['제품'], 3);
 (function(){
-  const stockRows = DATA.stock_cause;
+  const stockRows = [...DATA.stock_cause].sort((a,b)=>b.amount-a.amount);
   const max = Math.max(...stockRows.map(x=>x.amount));
   const stockTotal = DATA.stocktype_amt['STOCK'];
   const rowHtml = c => {
