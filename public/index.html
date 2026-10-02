@@ -275,18 +275,57 @@ table.rt tbody tr:nth-child(even){background:var(--bg)}
   .rank-row .amt{text-align:left}
   .tp-row{grid-template-columns:56px repeat(3,1fr); gap:4px; font-size:13px}
 }
+@page{ size: A4 portrait; margin: 17mm 10mm 13mm 10mm; }
+.print-head,.print-foot{display:none}
 @media print{
+  html{font-size:13px}
   .tabs, .controls, select, .tk-savebadge{display:none !important}
-  .pg{display:block !important; page-break-after:always; animation:none !important; background:#fff !important}
+  .topbar{display:none !important}
+  .pg{display:block !important; break-after:page; page-break-after:always; animation:none !important; background:#fff !important}
+  .pg:last-of-type{break-after:auto; page-break-after:auto}
   .pg.print-off{display:none !important}
-  .sec.collapsed .sec-body{display:block !important}
+  /* 접기/펼치기 상태는 화면 그대로 인쇄에 반영 — 강제 펼침 없음 */
   .cause-more-btn{display:none !important}
-  .cause-more{display:block !important}
-  .topbar{position:static}
+  .sec-chevron{display:none !important}
   body{background:#fff}
+  .main{max-width:none !important; padding-top:0 !important; padding-bottom:4mm !important}
   .card,.mc{box-shadow:none;border:1px solid #ccc}
   .table-scroll{max-height:none;overflow:visible}
   a[href]::after{content:''}
+  /* 타이틀 고아 방지 + 작은 블록 단위 쪼개짐 방지 */
+  .sec-t{break-after:avoid-page; page-break-after:avoid}
+  .card,.mc,.grade-card,.mo-card,.bar-row,tr,
+  .flow-step,.cmp-card,.cmp-row,.dl-item,.donut-row,.hist-row,
+  .kb-col,.kb-item,.rank-row,.stack-row,.tk-attach-item,.tk-card,.tk-row,.tp-row
+  {break-inside:avoid; page-break-inside:avoid}
+  .meta{break-inside:avoid}
+  /* 가로 폭 넓은 표가 인쇄 영역을 벗어나 잘리지 않도록 — 고정폭 해제 + 줄바꿈 허용 */
+  table.rt{min-width:0 !important; table-layout:fixed !important; width:100% !important}
+  table.rt th, table.rt td{white-space:normal !important; word-break:break-word; font-size:10px !important; padding:5px 6px !important}
+  table.rt .badge{white-space:normal !important; display:inline-block; text-align:center}
+  h1,h2,h3{break-after:avoid-page}
+  .print-head{
+    display:flex !important; position:fixed; top:0; left:0; right:0; height:12mm;
+    align-items:center; gap:9px; padding:0 4mm; border-bottom:1.4px solid var(--navy);
+    background:#fff; z-index:50;
+  }
+  .print-head-logo{height:16px;width:auto;flex-shrink:0}
+  .print-head-org{font-size:9.5px;color:var(--text2);white-space:nowrap}
+  .print-head-title{font-size:13px;font-weight:800;color:var(--navy);margin-left:6px;white-space:nowrap}
+  .print-head-meta{margin-left:auto;text-align:right;font-size:8.5px;font-family:var(--mono);color:var(--text2);line-height:1.45}
+  .print-foot{
+    display:flex !important; position:fixed; bottom:0; left:0; right:0; height:8mm;
+    align-items:center; justify-content:space-between; padding:0 4mm;
+    border-top:1px solid var(--border2); font-size:8.3px; color:var(--text3); background:#fff; z-index:50;
+  }
+  /* 화면용 1080px 반응형 규칙이 인쇄 폭에도 우연히 걸려(해당 미디어쿼리에 print 제외 조건이 없음)
+     카드형 섹션이 의도치 않게 1단으로 붕괴되던 문제 수정 — 인쇄 전용 칸수를 폭 기준과 무관하게 명시 */
+  .meta{grid-template-columns:repeat(4,1fr) !important}
+  .g2{grid-template-columns:1fr 1fr !important}
+  .g3{grid-template-columns:1fr 1fr !important}
+  .g5{grid-template-columns:repeat(3,1fr) !important}
+  .tk-row{grid-template-columns:1fr 1fr !important}
+  .tk-row4{grid-template-columns:1fr 1fr !important}
 }
 .login-mask{position:fixed;inset:0;background:rgba(18,40,58,.6);display:flex;align-items:center;justify-content:center;z-index:100}
 .login-mask.hide{display:none}
@@ -337,6 +376,16 @@ body.locked .topbar, body.locked .main{display:none}
 </head>
 <body class="locked">
 
+<div class="print-head" id="printHead">
+  <img class="print-head-logo" id="printHeadLogo" alt="PANASIA">
+  <span class="print-head-org">경영지원본부 · 통합구매팀</span>
+  <span class="print-head-title">불용재고(장기재고) 관리 현황</span>
+  <div class="print-head-meta"><div id="printHeadDoc"></div><div id="printHeadDate"></div></div>
+</div>
+<div class="print-foot" id="printFoot">
+  <span>작성자 · 경영지원본부/통합구매팀 정진석 프로</span>
+  <span id="printFootMeta"></span>
+</div>
 <div id="loginMask" class="login-mask">
   <div class="login-box">
     <h3>불용재고(장기재고) 관리현황 — 로그인</h3>
@@ -496,7 +545,7 @@ body.locked .topbar, body.locked .main{display:none}
 
 <!-- ── 2. 재활용 현황 ── -->
 <div id="pg-recycle" class="pg">
-  <div class="ph-desc">월별 재활용 실적 및 누적률 추이 (2026년 1~9월) · 보관 경과연차 분포</div>
+  <div class="ph-desc">월별 재활용 실적 및 누적률 추이 (2026년 1~9월 확정 + 10월 진행 반영) · 보관 경과연차 분포</div>
   <div class="sec">
     <div class="sec-t">월별 재활용 금액 · 누적 재활용률</div>
     <div class="card"><div id="monthlyChart"></div></div>
@@ -964,6 +1013,20 @@ function renderControlPanels(){
   ).join('');
 }
 document.getElementById('btnPrintPdf').addEventListener('click', ()=>window.print());
+(function(){
+  const PRINT_DOC_NO = 'PANASIA-UPT-INV-2026-10'; // 문서번호 — 체계 확정되면 이 줄만 수정
+  const srcLogo = document.querySelector('.tb-logo');
+  const phLogo = document.getElementById('printHeadLogo');
+  if(srcLogo && phLogo) phLogo.src = srcLogo.src;
+  const today = new Date();
+  const y=today.getFullYear(), mo=String(today.getMonth()+1).padStart(2,'0'), d=String(today.getDate()).padStart(2,'0');
+  const docEl = document.getElementById('printHeadDoc');
+  const dateEl = document.getElementById('printHeadDate');
+  const footEl = document.getElementById('printFootMeta');
+  if(docEl) docEl.textContent = '문서번호 ' + PRINT_DOC_NO;
+  if(dateEl) dateEl.textContent = `출력일 ${y}-${mo}-${d}`;
+  if(footEl) footEl.textContent = `기준일 2026-09-30(10월 변경이력 반영) · 문서번호 ${PRINT_DOC_NO}`;
+})();
 applyTabVisibility(); applyPrintTargets(); renderControlPanels();
 
 // ============ 전체 탭·섹션 접기/펼치기 ============
@@ -1066,7 +1129,7 @@ barList('ovStockCause', DATA.stock_cause.slice(0,4).map(c=>({name:c.name,amount:
 
 // ---- 보고 요지 ----
 document.getElementById('askText').innerHTML = `
-  1~9월 불용재고 ${won(k.total)} 중 ${won(k.recycled)}(${k.recycled_rate}%) 재활용 처리(목표 ${k.target_rate}%).
+  1~9월 누적 + 10월 진행 반영 기준 불용재고 ${won(k.total)} 중 ${won(k.recycled)}(${k.recycled_rate}%) 재활용 처리(목표 ${k.target_rate}%).
   <div style="margin-top:8px"><b>현재 운영 중인 관리체계</b></div>
   <ol style="padding-left:18px;margin-top:4px">
     <li>불용재고·부외재고 명칭·관리기준 통합</li>
@@ -1243,12 +1306,13 @@ document.getElementById('monthlyDetail').innerHTML = DATA.monthly.map((m,idx)=>{
         return `<div class="mo-item"><span class="mo-item-name">${it.group} · ${it.type} · ${it.name} <span style="color:var(--text3)">(${it.date})</span>${dest}</span><span class="mo-item-amt">${won(it.amount)}</span></div>`;
       }).join('')
     : `<div class="mo-empty">해당 월 재활용 확정 품목 없음</div>`;
+  const isLatest = idx === DATA.monthly.length-1;
   return `<div class="mo-card">
     <div class="mo-head" onclick="toggleMo(${idx})">
-      <div><div class="mo-title">${m.month}</div><div class="mo-sub">${m.items?m.items.length:0}건 재활용확정</div></div>
-      <div style="display:flex;align-items:center"><div class="mo-amt">${won(m.amount)}</div><span class="mo-arrow" id="mo-arrow-${idx}">▼</span></div>
+      <div><div class="mo-title">${m.month}${isLatest?' <span class="badge done" style="margin-left:6px">최신 업데이트</span>':''}</div><div class="mo-sub">${m.items?m.items.length:0}건 재활용확정</div></div>
+      <div style="display:flex;align-items:center"><div class="mo-amt">${won(m.amount)}</div><span class="mo-arrow" id="mo-arrow-${idx}">${isLatest?'▲':'▼'}</span></div>
     </div>
-    <div class="mo-body" id="mo-body-${idx}">${itemsHtml}</div>
+    <div class="mo-body${isLatest?' open':''}" id="mo-body-${idx}">${itemsHtml}</div>
   </div>`;
 }).join('');
 
