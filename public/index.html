@@ -253,7 +253,6 @@ input[type=text]{flex:1;min-width:180px}
 #pg-issues.on{background:var(--blue-l)}
 #pg-offbook.on{background:var(--purple-l)}
 #pg-items.on{background:var(--grey-l)}
-#pg-history.on{background:var(--navy-l)}
 #pg-guide.on{background:var(--grey-l)}
 .sec-t::before{content:'';display:inline-block;width:8px;height:8px;border-radius:2px;flex-shrink:0}
 .grade-card{border-top:3px solid var(--border2)}
@@ -456,8 +455,7 @@ body.locked .topbar, body.locked .main{display:none}
       <div class="tab tab-blue" role="tab" aria-selected="false" onclick="goPg('issues')">5. 사전검토 · 이력관리</div>
       <div class="tab tab-purple" role="tab" aria-selected="false" onclick="goPg('offbook')">6. 불용재고 · 부외재고</div>
       <div class="tab tab-grey" role="tab" aria-selected="false" onclick="goPg('items')">7. 품목 상세</div>
-      <div class="tab tab-navy" role="tab" aria-selected="false" onclick="goPg('history')">8. 이력 · 공유</div>
-      <div class="tab tab-grey" role="tab" aria-selected="false" onclick="goPg('guide')">9. 이용 가이드</div>
+      <div class="tab tab-grey" role="tab" aria-selected="false" onclick="goPg('guide')">8. 이용 가이드</div>
     </div>
   </div>
 </div>
@@ -735,25 +733,7 @@ body.locked .topbar, body.locked .main{display:none}
   </div>
 </div>
 
-<div id="pg-history" class="pg">
-  <div class="ph-desc">현재 화면(사전검토 트래커·데이터 검증 체크리스트) 상태를 시점별로 저장·공유합니다. 서버(Cloudflare)에 저장되어 팀 전원이 동일한 이력을 봅니다.</div>
-  <div class="card">
-    <div class="sec-t">현재 상태 저장 <span class="sec-tag">SAVE SNAPSHOT</span></div>
-    <div class="controls">
-      <input type="text" id="histLabel" placeholder="이력 제목 (예: 2026-08 부회장 보고용)" style="flex:1;min-width:220px;padding:8px 10px;border:1.5px solid var(--border2);border-radius:8px;font-size:12.5px">
-      <button class="hist-row-btn primary" id="histSaveBtn" style="padding:8px 16px;border-radius:8px;border:none;background:var(--teal);color:#fff;font-weight:700;font-size:12.5px;cursor:pointer">+ 현재 상태 저장</button>
-    </div>
-    <div id="histSaveMsg" style="font-size:12px;color:var(--text3);margin-top:6px"></div>
-  </div>
-  <div class="card" style="margin-top:16px">
-    <div class="sec-t">저장된 이력 <span class="sec-tag" id="histCount">REVIEW HISTORY</span></div>
-    <div class="hist-row head"><div>저장일시</div><div>제목</div><div>저장자</div><div>동작</div></div>
-    <div id="histList"></div>
-  </div>
-  <div class="info" style="margin-top:14px">이력의 "링크" 버튼을 누르면 그 시점 상태를 <b>읽기전용</b>으로 보여주는 공유 URL이 복사됩니다. "불러오기"는 그 시점 상태를 현재(라이브) 화면으로 되돌립니다.</div>
-</div>
-
-<!-- ── 9. 이용 가이드 ── -->
+<!-- ── 8. 이용 가이드 ── -->
 <div id="pg-guide" class="pg">
   <div class="ph-desc">성과목표 연계 배경 · 접속정보 · 유관부서 사용법 · 부서별 역할 안내</div>
 
@@ -998,7 +978,7 @@ function itemKey(i){ return i.uid || `${i.group}|${i.type}|${i.name}|${i.model}|
 const TAB_DEFS = [
   {id:'overview', label:'1. 개요'}, {id:'recycle', label:'2. 재활용 현황'}, {id:'cause', label:'3. 발생원인 분석'},
   {id:'grade', label:'4. 등급 · 처분관리'}, {id:'issues', label:'5. 사전검토 · 이력관리'}, {id:'offbook', label:'6. 불용재고 · 부외재고'},
-  {id:'items', label:'7. 품목 상세'}, {id:'history', label:'8. 이력 · 공유'}, {id:'guide', label:'9. 이용 가이드'}
+  {id:'items', label:'7. 품목 상세'}, {id:'guide', label:'8. 이용 가이드'}
 ];
 // 깃허브 저장소(public/index.html) 커밋 이력 — 날짜·내용 그대로 반영(최신순), 신규 배포 시 맨 위에 한 줄 추가
 const CHANGELOG = [
@@ -1885,76 +1865,6 @@ async function uploadAttachment(key, file){
     if(msgEl) msgEl.textContent = '업로드 실패: '+e.message;
   }
 }
-
-// ============ 이력(스냅샷) · 공유 URL 탭 ============
-function fmtDT(iso){
-  if(!iso) return '-';
-  const d = new Date(iso);
-  return d.toLocaleString('ko-KR', {year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
-}
-async function refreshHistoryList(){
-  const listEl = document.getElementById('histList');
-  const cntEl = document.getElementById('histCount');
-  listEl.innerHTML = '<div style="padding:14px 0;color:var(--text3);font-size:12px">불러오는 중...</div>';
-  try{
-    const res = await apiGet('/api/snapshots');
-    const snaps = res.snapshots || [];
-    cntEl.textContent = `저장 ${snaps.length}건 · 서버 보관`;
-    if(!snaps.length){
-      listEl.innerHTML = '<div style="padding:14px 0;color:var(--text3);font-size:12px">저장된 이력이 없습니다. 위에서 현재 상태를 먼저 저장해보세요.</div>';
-      return;
-    }
-    listEl.innerHTML = snaps.map(s => `
-      <div class="hist-row" data-id="${s.id}">
-        <div>${fmtDT(s.savedAt)}</div>
-        <div>${s.label}</div>
-        <div>${s.editor||'-'}</div>
-        <div>
-          <button class="primary" data-act="restore">불러오기</button>
-          <button data-act="link">링크</button>
-          <button class="danger" data-act="delete">삭제</button>
-        </div>
-      </div>`).join('');
-    listEl.querySelectorAll('.hist-row').forEach(row=>{
-      const id = row.getAttribute('data-id');
-      row.querySelector('[data-act=restore]').addEventListener('click', async ()=>{
-        if(!confirm('이 시점의 상태를 현재(라이브) 화면으로 불러올까요? 현재 화면의 변경사항은 덮어씌워집니다.')) return;
-        try{ await apiPost(`/api/snapshots/${id}/restore`, {}); location.reload(); }
-        catch(e){ alert('불러오기 실패: '+e.message); }
-      });
-      row.querySelector('[data-act=link]').addEventListener('click', ()=>{
-        const url = `${location.origin}${location.pathname}?snapshot=${id}`;
-        navigator.clipboard && navigator.clipboard.writeText(url).catch(()=>{});
-        prompt('아래 링크를 복사해 공유하세요 (읽기전용으로 열립니다):', url);
-      });
-      row.querySelector('[data-act=delete]').addEventListener('click', async ()=>{
-        if(!confirm('이 이력을 삭제할까요? 되돌릴 수 없습니다.')) return;
-        try{ await apiPost(`/api/snapshots/${id}`, undefined, 'DELETE'); refreshHistoryList(); }
-        catch(e){ alert('삭제 실패: '+e.message); }
-      });
-    });
-  }catch(e){
-    listEl.innerHTML = `<div style="padding:14px 0;color:var(--red);font-size:12px">이력을 불러오지 못했습니다: ${e.message}</div>`;
-  }
-}
-document.getElementById('histSaveBtn').addEventListener('click', async ()=>{
-  const label = document.getElementById('histLabel').value.trim();
-  const msgEl = document.getElementById('histSaveMsg');
-  msgEl.textContent = '저장 중...';
-  try{
-    await apiPost('/api/snapshots', {label});
-    document.getElementById('histLabel').value = '';
-    msgEl.textContent = '저장되었습니다.';
-    refreshHistoryList();
-  }catch(e){
-    msgEl.textContent = '저장 실패: '+e.message;
-  }
-});
-if(READONLY){
-  document.getElementById('histSaveBtn').disabled = true;
-  document.getElementById('histLabel').disabled = true;
-}
-refreshHistoryList();
 
 function rankRows(list, valFn, labelFn, subFn, color){
   const max = Math.max(...list.map(valFn));
