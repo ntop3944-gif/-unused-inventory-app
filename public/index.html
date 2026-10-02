@@ -362,6 +362,11 @@ table.rt tbody tr:nth-child(even){background:var(--bg)}
 .rc-dd{position:relative;display:inline-block}
 .rc-dd-panel{display:none;position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid var(--border2);border-radius:10px;box-shadow:0 10px 30px rgba(18,40,58,.18);padding:10px;min-width:200px;z-index:30}
 .rc-dd.open .rc-dd-panel{display:block}
+.changelog-panel{min-width:300px;max-width:340px;max-height:320px;overflow:auto}
+.changelog-item{padding:6px 2px;border-bottom:1px solid var(--border)}
+.changelog-item:last-child{border-bottom:none}
+.changelog-date{font-family:var(--mono);font-size:10.5px;color:var(--text3)}
+.changelog-msg{font-size:12.5px;color:var(--text);margin-top:1px}
 .rc-check{display:flex;align-items:center;gap:8px;font-size:12.6px;color:var(--text2);padding:5px 4px;cursor:pointer;white-space:nowrap}
 .rc-check input{cursor:pointer}
 .sec-t-toggle{cursor:pointer;user-select:none}
@@ -437,6 +442,10 @@ body.locked .topbar, body.locked .main{display:none}
       <div class="rc-dd" id="ddTabVis">
         <button class="rc-btn" type="button" onclick="toggleDD('ddTabVis')">표시 탭 설정 ▾</button>
         <div class="rc-dd-panel" id="tabVisPanel"></div>
+      </div>
+      <div class="rc-dd" id="ddChangelog">
+        <button class="rc-btn" type="button" onclick="toggleDD('ddChangelog')">업데이트 이력 ▾</button>
+        <div class="rc-dd-panel changelog-panel" id="changelogPanel"></div>
       </div>
     </div>
     <div class="tabs" role="tablist" aria-label="불용재고(장기재고) 관리 현황 탭">
@@ -550,11 +559,6 @@ body.locked .topbar, body.locked .main{display:none}
       <div class="card"><div class="card-title" style="font-size:13px;color:var(--text2)">STOCK(상시재고) / 호선용(PJT)</div><div id="donutStockType"></div></div>
       <div class="card"><div class="card-title" style="font-size:13px;color:var(--text2)">제품군별 (TLGS/BWTS/ECS)</div><div id="donutGroup"></div></div>
     </div>
-  </div>
-
-  <div class="sec">
-    <div class="sec-t">제품군별 요약</div>
-    <div class="card"><div id="groupStack"></div></div>
   </div>
 </div>
 
@@ -996,6 +1000,23 @@ const TAB_DEFS = [
   {id:'grade', label:'4. 등급 · 처분관리'}, {id:'issues', label:'5. 사전검토 · 이력관리'}, {id:'offbook', label:'6. 불용재고 · 부외재고'},
   {id:'items', label:'7. 품목 상세'}, {id:'history', label:'8. 이력 · 공유'}, {id:'guide', label:'9. 이용 가이드'}
 ];
+// 깃허브 저장소(public/index.html) 커밋 이력 — 날짜·내용 그대로 반영(최신순), 신규 배포 시 맨 위에 한 줄 추가
+const CHANGELOG = [
+  {date:'2026-10-02 11:49', msg:'인쇄영역 잘림현상 해결'},
+  {date:'2026-10-02 11:35', msg:'인쇄페이지 최적화'},
+  {date:'2026-10-02 09:27', msg:'로그인 시 부서 자동필터 제거 이력 공통열람'},
+  {date:'2026-10-02 08:40', msg:'발생원인분석 TOP3 노출'},
+  {date:'2026-10-02 08:30', msg:'정합성보정/저장버튼추가'},
+  {date:'2026-10-01 17:44', msg:'9월 장기재고현황 업데이트 및 공통 템플릿'},
+  {date:'2026-09-29 10:44', msg:'유관부서 사전검토 협의체계 기능추가'},
+  {date:'2026-09-23 11:29', msg:'8월 불용재고현황 업데이트(유관부서 로그인정보)'},
+  {date:'2026-09-23 09:09', msg:'7월 KPI 반영 및 LVCC 이력 수정'},
+  {date:'2026-09-22 14:36', msg:'2026.09.22(화) 14:36 업데이트'},
+  {date:'2026-09-22 13:38', msg:'2026.09.22(화) 13:38 업데이트'},
+  {date:'2026-09-22 13:19', msg:'디자인 전면 업데이트'},
+  {date:'2026-09-22 11:53', msg:'8월 장기재고 재활용 데이터 업데이트'},
+  {date:'2026-08-21 13:56', msg:'Create index.html (최초 생성)'},
+];
 function lsGet(key, fallback){ try{ const v = JSON.parse(localStorage.getItem(key)); return v && typeof v==='object' ? v : fallback; }catch(e){ return fallback; } }
 function lsSet(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
 const tabVisible = lsGet('dashTabVisible', {});
@@ -1026,6 +1047,9 @@ function renderControlPanels(){
   document.getElementById('printTargetPanel').innerHTML = TAB_DEFS.map(t=>
     `<label class="rc-check"><input type="checkbox" ${printTargets[t.id]!==false?'checked':''} onchange="printTargets['${t.id}']=this.checked; lsSet('dashPrintTargets',printTargets); applyPrintTargets();">${t.label}</label>`
   ).join('');
+  document.getElementById('changelogPanel').innerHTML =
+    '<div style="font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:6px">대시보드 업데이트 이력</div>' +
+    CHANGELOG.map(c=>`<div class="changelog-item"><div class="changelog-date">${c.date}</div><div class="changelog-msg">${c.msg}</div></div>`).join('');
 }
 document.getElementById('btnPrintPdf').addEventListener('click', ()=>window.print());
 (function(){
@@ -1241,31 +1265,6 @@ renderDonut('donutGroup', [
   {label:'TLGS', value:gs['TLGS']['관리대상'], color:COLORS.blueM},
   {label:'ECS', value:gs['ECS']['관리대상'], color:COLORS.purple},
 ]);
-
-(function(){
-  const groups=['TLGS','BWTS','ECS'];
-  const perGroup={}; groups.forEach(g=>perGroup[g]={'원재료':0,'제품':0});
-  DATA.items.forEach(i=>{ if(perGroup[i.group]) perGroup[i.group][i.type]+=i.amount; });
-  const maxTotal = Math.max(...groups.map(g=>gs[g]['관리대상']));
-  document.getElementById('groupStack').innerHTML = groups.map(g=>{
-    const d=perGroup[g]; const tot=d['원재료']+d['제품'];
-    const rate = gs[g]['관리대상']? (gs[g]['재활용']/gs[g]['관리대상']*100):0;
-    const wRaw = tot? (d['원재료']/tot*100):0, wProd=100-wRaw;
-    const scale = maxTotal? (tot/maxTotal*100):0;
-    return `<div class="stack-row">
-      <div class="bar-lbl">${g}</div>
-      <div class="stack-track" style="width:${scale}%">
-        <div style="width:${wRaw}%;background:${COLORS.navy}" title="원재료 ${won(d['원재료'])}"></div>
-        <div style="width:${wProd}%;background:${COLORS.blueM}" title="제품 ${won(d['제품'])}"></div>
-      </div>
-      <div class="bar-val">${wonShort(tot)}</div>
-      <div class="bar-val" style="color:${rate>=10?'var(--teal)':'var(--text2)'}">${rate.toFixed(1)}%</div>
-    </div>`;
-  }).join('') + `<div style="display:flex;gap:16px;margin-top:12px;font-size:12px;color:var(--text2)">
-    <span><span style="display:inline-block;width:9px;height:9px;background:${COLORS.navy};border-radius:2px;margin-right:5px"></span>원재료</span>
-    <span><span style="display:inline-block;width:9px;height:9px;background:${COLORS.blueM};border-radius:2px;margin-right:5px"></span>제품</span>
-  </div>`;
-})();
 
 // ============ Recycle (combo chart: bar + cumulative line) ============
 (function(){
