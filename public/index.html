@@ -217,6 +217,7 @@ input[type=text]{flex:1;min-width:180px}
 .tk-note{font-size:13.3px;color:var(--text2);margin:6px 0 10px;background:var(--surface2);border-radius:8px;padding:7px 9px}
 .tk-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:center;margin-bottom:8px}
 .tk-row4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;align-items:center;margin-bottom:8px}
+.tk-row-print,.tk-note-print{display:none}
 .tk-save-btn{font-size:12.6px;font-weight:700;padding:7px 16px;border-radius:8px;border:none;background:var(--teal);color:#fff;cursor:pointer;white-space:nowrap}
 .tk-save-btn:hover{filter:brightness(1.08)}
 .tk-save-btn:disabled{background:var(--grey);cursor:default}
@@ -326,6 +327,20 @@ table.rt tbody tr:nth-child(even){background:var(--bg)}
   .g5{grid-template-columns:repeat(3,1fr) !important}
   .tk-row{grid-template-columns:1fr 1fr !important}
   .tk-row4{grid-template-columns:1fr 1fr !important}
+  /* 트래커 카드 내부 입력폼(select/input)은 인쇄 시 내용이 잘리거나(input 한 줄 고정폭)
+     아예 보이지 않으므로(select는 위 규칙으로 숨김) 줄바꿈 가능한 정적 텍스트로 대체 출력 */
+  .tk-row4{display:none !important}
+  .tk-note-i{display:none !important}
+  .tk-save-btn{display:none !important}
+  .tk-row-print{
+    display:flex !important; flex-wrap:wrap; gap:5px 16px; font-size:10.5px; color:var(--text2);
+    margin-bottom:6px; padding-bottom:6px; border-bottom:1px dashed var(--border2);
+  }
+  .tk-row-print b{color:var(--text); font-weight:700; margin-right:3px}
+  .tk-note-print{
+    display:block !important; white-space:normal !important; word-break:break-word;
+    font-size:11px; color:var(--text); margin-bottom:6px; line-height:1.5;
+  }
 }
 .login-mask{position:fixed;inset:0;background:rgba(18,40,58,.6);display:flex;align-items:center;justify-content:center;z-index:100}
 .login-mask.hide{display:none}
@@ -1554,10 +1569,17 @@ function trackerRow(i){
       <select class="tk-progress">${opts(PROGRESS,t.progress)}</select>
       <select class="tk-result">${opts(RESULTS,t.result)}</select>
     </div>
+    <div class="tk-row-print">
+      <span><b>기준월</b> ${t.month? monthLabel(t.month):'미지정'}</span>
+      <span><b>담당부서</b> ${t.dept||'미지정'}</span>
+      <span><b>진행현황</b> ${t.progress||'미지정'}</span>
+      <span><b>결과</b> ${t.result||'미지정'}</span>
+    </div>
     <div class="tk-row" style="grid-template-columns:1fr auto">
       <input type="text" class="tk-note-i" placeholder="검토의견 / 유관부서 합의사항" value="${t.note||''}">
       <button type="button" class="tk-save-btn" data-save-key="${key}">저장</button>
     </div>
+    ${t.note? `<div class="tk-note-print"><b>검토의견/합의사항</b> ${t.note}</div>`:''}
     <div class="tk-meta">${t.month? '기준월 '+monthLabel(t.month)+' · ':''}${t.updatedAt? '최종 업데이트: '+t.updatedAt+(t.lastEditor? ' ('+t.lastEditor+')':'') : '아직 업데이트 없음'} <span class="tk-savebadge">저장됨</span>
       ${logHtml? `<div style="margin-top:4px">${logHtml}${moreHtml}</div>`:''}
     </div>
