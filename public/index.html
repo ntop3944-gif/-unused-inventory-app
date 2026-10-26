@@ -355,6 +355,77 @@ table.rt tbody tr:nth-child(even){background:var(--bg)}
     font-size:11px; color:var(--text); margin-bottom:6px; line-height:1.5;
   }
 }
+
+/* ===== 품목현황 / 사전검토 목록(2026-10-27) ===== */
+.il-card{padding:14px 16px}
+.il-chips{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.il-chip-lbl{font-size:12.3px;font-weight:700;color:var(--text2);min-width:56px;padding-top:7px}
+.il-chip-row{display:flex;flex-wrap:wrap;gap:6px}
+.il-chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;padding:5px 11px;border-radius:99px;border:1.5px solid var(--border2);background:#fff;color:var(--text2);cursor:pointer;white-space:nowrap;font-family:var(--font)}
+.il-chip b{font-family:var(--mono);color:var(--text)}
+.il-chip .il-chip-amt{font-family:var(--mono);font-size:11.5px;color:var(--text3)}
+.il-chip .il-dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.il-chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.il-chip.on b,.il-chip.on .il-chip-amt{color:#fff}
+.il-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0 8px;font-size:12.5px}
+.il-controls select,.il-controls input[type=text]{font-size:12.5px;padding:5px 8px;border-radius:7px;border:1px solid var(--border2);background:#fff;color:var(--text)}
+.il-controls input[type=text]{min-width:200px}
+.il-controls label{display:flex;align-items:center;gap:5px;color:var(--text3);cursor:pointer}
+.il-controls button{font-size:12px;padding:6px 12px;border-radius:7px;border:1px solid var(--blue);background:#fff;color:var(--blue);cursor:pointer}
+.il-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--text3);margin-bottom:8px}
+.il-legend span{display:inline-flex;align-items:center;gap:5px}
+.il-legend i{display:inline-block;width:10px;height:10px;border-radius:2px}
+.il-scroll{max-height:640px}
+table.il-tbl{min-width:1100px;table-layout:fixed;width:100%}
+table.il-tbl th,table.il-tbl td{white-space:normal !important;word-break:keep-all;overflow-wrap:anywhere}
+table.il-tbl .badge{white-space:nowrap;line-height:1.5}
+table.il-tbl th.amt{text-align:right}
+table.il-tbl td:nth-child(9),table.il-tbl td:nth-child(5),table.il-tbl td:nth-child(1){white-space:nowrap !important}
+table.il-tbl td.amt{white-space:nowrap !important;word-break:keep-all}
+table.il-tbl tbody tr:nth-child(even){background:transparent}
+table.il-tbl tbody tr.il-row{cursor:pointer}
+table.il-tbl tbody tr.il-row:hover{background:var(--bg)}
+table.il-tbl tbody tr.il-row.open{background:var(--blue-l)}
+table.il-tbl tbody tr.il-row td:first-child{border-left:4px solid var(--grey)}
+table.il-tbl tbody tr.st-recycled td:first-child{border-left-color:var(--teal)}
+table.il-tbl tbody tr.st-review td:first-child{border-left-color:var(--blue)}
+table.il-tbl tbody tr.st-disp td:first-child{border-left-color:var(--amber)}
+table.il-tbl tbody tr.st-etc td:first-child{border-left-color:var(--grey)}
+table.il-tbl td.il-name{min-width:0;max-width:none}
+table.il-tbl td.il-name small{display:block;color:var(--text3);font-size:11.5px}
+table.il-tbl td.il-vendor{min-width:0;max-width:none;font-size:12.3px}
+table.il-tbl td.il-vendor small{display:block;color:var(--text3);font-size:11.5px}
+table.il-tbl td.il-last{min-width:0;max-width:none;font-size:12px}
+table.il-tbl td.il-last small{display:block;color:var(--text3);font-size:11.5px}
+table.il-tbl td.amt{white-space:nowrap}
+table.il-tbl td.il-detail-cell{white-space:normal;max-width:none;min-width:0;padding:10px 12px 4px;background:var(--bg);border-left:4px solid var(--navy)}
+table.il-tbl td.il-detail-cell .tk-card{margin-bottom:6px}
+.il-hist{display:inline-block;font-size:11px;font-weight:700;color:var(--blue);background:var(--blue-l);border-radius:99px;padding:1px 7px;margin-top:2px}
+.il-caret{color:var(--text3);font-size:11px;margin-right:4px}
+.il-empty{padding:18px;text-align:center;color:var(--text3);font-size:13px}
+@media print{
+  .il-controls,.il-chip-lbl-hint{display:none !important}
+  .il-chip{padding:2px 7px;font-size:9.5px;border-width:1px}
+  .il-chip .il-chip-amt{font-size:9px}
+  .il-scroll{max-height:none;overflow:visible}
+  table.il-tbl{min-width:0 !important}
+  table.il-tbl th,table.il-tbl td{font-size:8.6px !important;padding:3px 3px !important;line-height:1.35}
+  table.il-tbl col:nth-child(1){width:9%} table.il-tbl col:nth-child(2){width:7%} table.il-tbl col:nth-child(3){width:5%}
+  table.il-tbl col:nth-child(4){width:4.5%} table.il-tbl col:nth-child(5){width:5.5%} table.il-tbl col:nth-child(6){width:17%}
+  table.il-tbl col:nth-child(7){width:12.5%} table.il-tbl col:nth-child(8){width:10.5%} table.il-tbl col:nth-child(9){width:4.5%}
+  table.il-tbl col:nth-child(10){width:8%} table.il-tbl col:nth-child(11){width:9.5%} table.il-tbl col:nth-child(12){width:7%}
+  table.il-tbl td:nth-child(4),table.il-tbl td:nth-child(5),table.il-tbl td:nth-child(8),table.il-tbl td:nth-child(9){overflow-wrap:normal !important;word-break:keep-all !important}
+  table.il-tbl td:nth-child(8){font-size:7.8px !important}
+  table.il-tbl td.il-last .age-badge,table.il-tbl td.il-last small{display:none !important}
+  table.il-tbl small{font-size:7.8px !important}
+  table.il-tbl td.amt{white-space:nowrap !important;word-break:keep-all !important}
+  table.il-tbl td.il-name,table.il-tbl td.il-vendor,table.il-tbl td.il-last{min-width:0;max-width:none}
+  table.il-tbl .badge{font-size:7.8px;padding:1px 4px;line-height:1.3;white-space:normal}
+  table.il-tbl td.il-detail-cell{padding:6px 6px 2px !important}
+  .il-caret{display:none}
+  .mc-v{white-space:nowrap;font-size:16px}
+  table.rt td.amt,table.rt th.amt{white-space:nowrap !important;word-break:keep-all !important}
+}
 .login-mask{position:fixed;inset:0;background:rgba(18,40,58,.6);display:flex;align-items:center;justify-content:center;z-index:100}
 .login-mask.hide{display:none}
 .login-box{background:var(--surface);border-radius:var(--radius);padding:28px 26px;width:320px;box-shadow:0 10px 40px rgba(18,40,58,.28)}
@@ -475,9 +546,8 @@ body.locked .topbar, body.locked .main{display:none}
       <div class="tab tab-teal" role="tab" aria-selected="false" onclick="goPg('recycle')">2. 재활용 현황</div>
       <div class="tab tab-amber" role="tab" aria-selected="false" onclick="goPg('cause')">3. 발생원인 분석</div>
       <div class="tab tab-red" role="tab" aria-selected="false" onclick="goPg('grade')">4. 등급 · 처분관리</div>
-      <div class="tab tab-blue" role="tab" aria-selected="false" onclick="goPg('issues')">5. 사전검토 · 이력관리</div>
+      <div class="tab tab-blue" role="tab" aria-selected="false" onclick="goPg('issues')">5. 품목현황 / 사전검토</div>
       <div class="tab tab-purple" role="tab" aria-selected="false" onclick="goPg('offbook')">6. 불용재고 · 부외재고</div>
-      <div class="tab tab-grey" role="tab" aria-selected="false" onclick="goPg('items')">7. 품목 상세</div>
     </div>
   </div>
 </div>
@@ -496,16 +566,6 @@ body.locked .topbar, body.locked .main{display:none}
 
   <div class="meta" id="metaCards"></div>
   <div class="info" id="combinedInfo"></div>
-
-  <div class="sec">
-    <div class="sec-t">데이터 검증 상태 <span class="sec-tag">통합구매팀 내부 검증용 — 완료 후에도 이력 확인용으로 유지 권장</span></div>
-    <div class="card">
-      <details id="verifyDetails">
-        <summary id="verifySummary" style="cursor:pointer;font-size:12.5px;color:var(--text2);font-weight:600">불러오는 중...</summary>
-        <div id="verifyChecklist" style="margin-top:12px"></div>
-      </details>
-    </div>
-  </div>
 
   <div class="sec">
     <div class="sec-t">불용재고 처리 프로세스 흐름 <span class="sec-tag">발생 → 분류 → 등급판정 → 사전검토 → 결과</span></div>
@@ -574,7 +634,7 @@ body.locked .topbar, body.locked .main{display:none}
   </div>
 
   <div class="sec">
-    <div class="sec-t">불용재고 자산 구성비율 <span class="sec-tag">※ 상태분류는 비고(의견합의) 텍스트 자동매칭 — 검증 필요</span></div>
+    <div class="sec-t">불용재고 자산 구성비율 <span class="sec-tag">※ 상태분류 기준: 품목별 비고(의견합의) 기재 내용</span></div>
     <div class="g4">
       <div class="card"><div class="card-title" style="font-size:13px;color:var(--text2)">유형별 (원재료 / 제품)</div><div id="donutType"></div></div>
       <div class="card"><div class="card-title" style="font-size:13px;color:var(--text2)">수주구분 (제품 기준 · 본물량/SPARE)</div><div id="donutOrderType"></div></div>
@@ -616,7 +676,7 @@ body.locked .topbar, body.locked .main{display:none}
   </div>
 
   <div class="sec">
-    <div class="sec-t">원재료 STOCK(상시재고) 발생원인별 구성비 <span class="sec-tag">사양/규격 변경이 70.5%로 최다</span></div>
+    <div class="sec-t">원재료 STOCK(상시재고) 발생원인별 구성비 <span class="sec-tag" id="stockCauseTop"></span></div>
     <div class="card"><div id="stockCauseBars"></div></div>
   </div>
 </div>
@@ -648,7 +708,7 @@ body.locked .topbar, body.locked .main{display:none}
 
 <!-- ── 5. 사전검토 · 이력관리 ── -->
 <div id="pg-issues" class="pg">
-  <div class="ph-desc">정기배포 → 사전검토요청 → 회신/처리이력의 진행상태를 유관부서·담당자별로 관리합니다.</div>
+  <div class="ph-desc">관리대상 전체 품목을 재고상태와 사전검토 진행 기준으로 분류합니다. 품목(행)을 누르면 담당부서/진행현황/결과/검토의견 입력, 이력, 첨부 카드가 펼쳐집니다.</div>
   <div class="collab-banner">
     <div>&#128101;</div>
     <div>이 페이지의 <b>담당부서·진행현황·검토의견</b>은 이 파일을 여는 모든 사람에게 공유되어 저장됩니다(팀 공용). 부서 필터를 본인 부서로 선택해 작업한 뒤 카드의 "저장" 버튼을 누르면 반영됩니다. <span id="storageWarn"></span></div>
@@ -659,27 +719,54 @@ body.locked .topbar, body.locked .main{display:none}
     <b>결과</b> — 미정(처리방향 미정) / 재활용(대체사용 확정) / 처분(매각·폐기 확정) / 보류(대상없음·추가확인 필요)
   </div>
 
-  <div class="card" style="margin-bottom:14px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-size:12.5px">
-    <div style="display:flex;align-items:center;gap:6px">
-      <label style="color:var(--text3)">부서 필터</label>
-      <select id="deptFilterSel" style="font-size:12.5px;padding:4px 8px;border-radius:6px;border:1px solid var(--surface2)">
-        <option value="all">전체</option>
-        <option value="설계">설계</option>
-        <option value="구매">구매</option>
-        <option value="영업">영업</option>
-        <option value="생산">생산</option>
-        <option value="물류">물류</option>
-        <option value="품질">품질</option>
-      </select>
+  <div class="sec" id="secItemList">
+    <div class="sec-t">품목 현황 목록 <span class="sec-tag" id="ilSummary"></span></div>
+    <div class="card il-card">
+      <div class="il-chips"><span class="il-chip-lbl">재고상태</span><div class="il-chip-row" id="ilChipsStatus"></div></div>
+      <div class="il-chips"><span class="il-chip-lbl">검토진행</span><div class="il-chip-row" id="ilChipsProg"></div></div>
+      <div class="il-controls">
+        <select id="deptFilterSel" title="담당부서">
+          <option value="all">담당부서 전체</option>
+          <option value="설계">설계</option>
+          <option value="구매">구매</option>
+          <option value="영업">영업</option>
+          <option value="생산">생산</option>
+          <option value="물류">물류</option>
+          <option value="품질">품질</option>
+        </select>
+        <select id="ilGroup" title="제품군"><option value="">제품군 전체</option></select>
+        <select id="ilType" title="유형"><option value="">유형 전체</option></select>
+        <select id="ilGrade" title="등급"><option value="">등급 전체</option></select>
+        <select id="ilSort" title="정렬">
+          <option value="amount">금액 큰 순</option>
+          <option value="recent">최근 검토 순</option>
+          <option value="year">보관년차 높은 순</option>
+          <option value="status">재고상태 순</option>
+        </select>
+        <input type="text" id="ilSearch" placeholder="품명/모델/거래처/호선/수주번호/비고 검색">
+        <label><input type="checkbox" id="ilHistOnly"> 검토이력 있는 품목만</label>
+        <label><input type="checkbox" id="delayedOnlyChk"> 지연 항목만</label>
+        <button type="button" id="ilCollapseAll">펼친 품목 모두 접기</button>
+        <button type="button" id="exportCsvBtn">목록 내보내기(CSV)</button>
+      </div>
+      <div class="il-legend">
+        <span><i style="background:var(--teal)"></i>재활용완료</span>
+        <span><i style="background:var(--blue)"></i>사용검토</span>
+        <span><i style="background:var(--amber)"></i>처분예정</span>
+        <span><i style="background:var(--grey)"></i>기타(보관중)</span>
+        <span>행 왼쪽 색 띠 = 재고상태 / "이력 n건" = 사전검토 이력 보유 품목 / 행을 누르면 상세 카드 펼침</span>
+      </div>
+      <div class="table-scroll il-scroll"><table class="rt il-tbl">
+        <colgroup>
+          <col style="width:9%"><col style="width:7%"><col style="width:6%"><col style="width:4%"><col style="width:5%">
+          <col style="width:15%"><col style="width:12%"><col style="width:10%"><col style="width:5%"><col style="width:11%">
+          <col style="width:8%"><col style="width:8%">
+        </colgroup>
+        <thead><tr><th>재고상태</th><th>검토진행</th><th>결과</th><th>담당</th><th>제품군</th><th>품명 / 모델</th><th>거래처 / 호선</th><th>수주번호</th><th>년차</th><th>등급</th><th class="amt">금액</th><th>최근 검토</th></tr></thead>
+        <tbody id="ilBody"></tbody>
+      </table></div>
     </div>
-    <label style="display:flex;align-items:center;gap:5px;color:var(--text3);cursor:pointer">
-      <input type="checkbox" id="delayedOnlyChk"> 지연 항목만 보기
-    </label>
-    <span id="filterSummary" style="color:var(--text3)"></span>
-    <button id="exportCsvBtn" style="margin-left:auto;font-size:12px;padding:6px 12px;border-radius:6px;border:1px solid var(--blue);background:#fff;color:var(--blue);cursor:pointer">이력 내보내기(CSV)</button>
   </div>
-
-  <div class="g3" id="issueMeta"></div>
 
   <div class="sec">
     <div class="sec-t">진척 현황(칸반) <span class="sec-tag">즉시처분·처분예정·사용검토 대상 전체 기준</span></div>
@@ -701,18 +788,6 @@ body.locked .topbar, body.locked .main{display:none}
     <div class="sec-t">데이터 정합성 체크 <span class="sec-tag">트래커 재활용 확정 ↔ KPI 집계 데이터셋 비교</span></div>
     <div id="consistencyCheck"></div>
   </div>
-
-  <div class="sec">
-    <div class="sec-t">즉시처분(최우선)·처분예정 진행관리 <span class="sec-tag" id="dispCnt"></span></div>
-    <div id="dispTracker"></div>
-  </div>
-
-  <div class="sec">
-    <div class="sec-t">사용검토 진행관리 <span class="sec-tag" id="reviewCnt"></span></div>
-    <div id="reviewTracker"></div>
-  </div>
-
-  <div class="sec"><div class="info" id="etcInfo"></div></div>
 
   <div class="sec">
     <div class="sec-t">거래처(발주처) 집중도 TOP 6</div>
@@ -737,24 +812,6 @@ body.locked .topbar, body.locked .main{display:none}
       <thead><tr><th>품명</th><th>규격</th><th class="amt">금액</th><th>등급</th><th>창고</th><th>랙</th><th>생성일</th></tr></thead>
       <tbody id="offTbl"></tbody>
     </table></div></div>
-  </div>
-</div>
-
-<!-- ── 7. 품목 상세 ── -->
-<div id="pg-items" class="pg">
-  <div class="ph-desc">제품군·유형·STOCK/PJT·등급 기준 필터링 (전체 <span id="itemsTotalCnt">181</span>건)</div>
-  <div class="card">
-    <div class="controls">
-      <select id="fGroup"><option value="">제품군 전체</option></select>
-      <select id="fType"><option value="">유형 전체</option></select>
-      <select id="fStockType"><option value="">STOCK/PJT 전체</option></select>
-      <select id="fGrade"><option value="">등급 전체</option></select>
-      <input type="text" id="fSearch" placeholder="품명·거래처·모델 검색...">
-    </div>
-    <div class="table-scroll"><table class="rt">
-      <thead><tr><th>제품군</th><th>유형</th><th>구분</th><th>품명</th><th>모델</th><th>거래처</th><th>호선명</th><th>수주번호</th><th class="amt">금액</th><th>년차</th><th>등급</th><th>비고</th></tr></thead>
-      <tbody id="tblBody"></tbody>
-    </table></div>
   </div>
 </div>
 
@@ -802,7 +859,7 @@ body.locked .topbar, body.locked .main{display:none}
     <div class="card">
       <div style="font-size:13px;line-height:1.8">
         대시보드 주소: <a href="https://unused-inventory-app.ntop3944.workers.dev" target="_blank" style="color:var(--blue);font-weight:700">https://unused-inventory-app.ntop3944.workers.dev</a><br>
-        사내메신저 등으로 이 주소를 공유하고, 아래 부서별 계정으로 로그인하도록 안내해 주시기 바랍니다.
+        사내메신저 등으로 이 주소를 공유하고, 관리자가 개별 안내한 부서별 계정으로 로그인하도록 안내해 주시기 바랍니다.
       </div>
     </div>
   </div>
@@ -810,18 +867,7 @@ body.locked .topbar, body.locked .main{display:none}
   <div class="sec">
     <div class="sec-t">유관부서 로그인 정보</div>
     <div class="card">
-      <table class="rt">
-        <thead><tr><th>부서</th><th>아이디</th><th>비밀번호</th></tr></thead>
-        <tbody>
-          <tr><td><b>영업</b></td><td style="font-family:var(--mono)">sales</td><td style="font-family:var(--mono)">sales2026</td></tr>
-          <tr><td><b>설계</b></td><td style="font-family:var(--mono)">design</td><td style="font-family:var(--mono)">design2026</td></tr>
-          <tr><td><b>구매</b></td><td style="font-family:var(--mono)">purchase</td><td style="font-family:var(--mono)">purchase2026</td></tr>
-          <tr><td><b>생산</b></td><td style="font-family:var(--mono)">production</td><td style="font-family:var(--mono)">production2026</td></tr>
-          <tr><td><b>물류</b></td><td style="font-family:var(--mono)">logistics</td><td style="font-family:var(--mono)">logistics2026</td></tr>
-          <tr><td><b>품질</b></td><td style="font-family:var(--mono)">quality</td><td style="font-family:var(--mono)">quality2026</td></tr>
-        </tbody>
-      </table>
-      <div class="info" style="margin-top:14px">이 계정정보는 Cloudflare KV(auth:users)에 실제로 반영되어야 로그인이 됩니다 — 하단 "관리자 전용 안내"의 계정 반영 방법을 참고해 주시기 바랍니다.</div>
+      <div style="font-size:13px;line-height:1.8">부서별 계정(아이디/비밀번호)은 보안상 화면에 게시하지 않으며, 통합구매팀 관리자가 부서 담당자에게 개별 안내합니다.</div>
     </div>
   </div>
 
@@ -913,7 +959,7 @@ body.locked .topbar, body.locked .main{display:none}
       <details id="adminGuideDetails">
         <summary style="cursor:pointer;font-size:12.5px;color:var(--navy);font-weight:700">계정 반영 · 월별 데이터 갱신 · 배포 절차 펼쳐보기</summary>
         <div style="font-size:12.5px;line-height:2;margin-top:12px;color:var(--text2)">
-          <b>0) 유관부서 계정 반영</b> — Cloudflare 대시보드 → Storage &amp; Databases → KV → TRACKER_KV → "KV 쌍" 탭 → auth:users 키 검색 → 편집 → 위 표의 6개 부서 계정을 포함한 전체 내용으로 교체 후 저장합니다.<br>
+          <b>0) 유관부서 계정 반영</b> — Cloudflare 대시보드 → Storage &amp; Databases → KV → TRACKER_KV → "KV 쌍" 탭 → auth:users 키 검색 → 편집 → 6개 부서 계정을 포함한 전체 내용으로 교체 후 저장합니다.<br>
           <b>1) 월별 원자료 취합</b> — 매월 신규 불용재고 현황 엑셀을 통합구매팀이 준비합니다.<br>
           <b>2) 데이터 갱신</b> — 신규 자료를 기준으로 대시보드의 품목 · KPI · 등급 데이터를 갱신합니다.<br>
           <b>3) GitHub 반영</b> — 갱신된 index.html 전체 내용을 GitHub 저장소(public/index.html) 편집화면에서 전체 교체(Ctrl+A → 붙여넣기) 후 커밋합니다.<br>
@@ -923,6 +969,17 @@ body.locked .topbar, body.locked .main{display:none}
       </details>
     </div>
   </div>
+
+  <div class="sec">
+    <div class="sec-t">데이터 검증 상태 <span class="sec-tag">통합구매팀 내부 검증용(보고 화면 및 인쇄 미표시)</span></div>
+    <div class="card">
+      <details id="verifyDetails">
+        <summary id="verifySummary" style="cursor:pointer;font-size:12.5px;color:var(--text2);font-weight:600">불러오는 중...</summary>
+        <div id="verifyChecklist" style="margin-top:12px"></div>
+      </details>
+    </div>
+  </div>
+
     </div>
   </div>
 </div>
@@ -930,7 +987,7 @@ body.locked .topbar, body.locked .main{display:none}
 <div class="card" style="margin-top:30px;background:var(--surface2);border:none">
   <div style="font-size:12px;color:var(--text3);line-height:1.8">
     <b>데이터 출처</b>: 2026년_09월_불용보관재고 현황.xlsx(원재료/제품/부외재고 상세) · 통합구매팀 작성 · 기준일 2026-09-30 · 10월 변경이력(이관 2건) 2026-10-01 추가 반영<br>
-    <b>산출 로직</b>: 상태분류·발생원인 카테고리는 비고란 텍스트 자동매칭, 처분 우선순위 등급은 보관년차×금액상위20%×검토이력 조합 — 전사 공유 전 통합구매팀 검증 필요("데이터 검증 상태" 참조)<br>
+    <b>산출 로직</b>: 상태분류/발생원인 카테고리는 품목별 비고란 기재 내용 기준 분류, 처분 우선순위 등급은 보관년차×금액상위20%×검토이력 조합<br>
     <b>갱신 방법</b>: 매월 신규 불용재고 현황 엑셀을 통합구매팀이 준비하여 본 대시보드에 반영·재계산합니다.
   </div>
 </div>
@@ -1030,11 +1087,11 @@ function itemKey(i){ return i.uid || `${i.group}|${i.type}|${i.name}|${i.model}|
 // ============ Report controls: 표시 탭 설정 / 인쇄 대상 선택 / 인쇄·PDF ============
 const TAB_DEFS = [
   {id:'overview', label:'1. 개요'}, {id:'recycle', label:'2. 재활용 현황'}, {id:'cause', label:'3. 발생원인 분석'},
-  {id:'grade', label:'4. 등급 · 처분관리'}, {id:'issues', label:'5. 사전검토 · 이력관리'}, {id:'offbook', label:'6. 불용재고 · 부외재고'},
-  {id:'items', label:'7. 품목 상세'}
+  {id:'grade', label:'4. 등급 · 처분관리'}, {id:'issues', label:'5. 품목현황 / 사전검토'}, {id:'offbook', label:'6. 불용재고 · 부외재고'}
 ];
 // 깃허브 저장소(public/index.html) 커밋 이력 — 날짜·내용 그대로 반영(최신순), 신규 배포 시 맨 위에 한 줄 추가
 const CHANGELOG = [
+  {date:'2026-10-27', msg:'사전검토 탭 품목현황 목록화(재고상태/검토진행 분류 버튼, 행 클릭 상세 카드), 품목 상세 탭 통합, 개요 발생원인 정렬 및 통합 재활용률 계산식 오류 수정, 계정정보 표 삭제'},
   {date:'2026-10-02 11:49', msg:'인쇄영역 잘림현상 해결'},
   {date:'2026-10-02 11:35', msg:'인쇄페이지 최적화'},
   {date:'2026-10-02 09:27', msg:'로그인 시 부서 자동필터 제거 이력 공통열람'},
@@ -1200,13 +1257,20 @@ document.getElementById('metaCards').innerHTML = `
   <div class="mc" style="border-left-color:var(--amber)"><div class="mc-l">잔여 재고</div><div class="mc-v" style="color:var(--amber)">${wonShort(k.remaining)}</div><div class="mc-s">${(100-k.recycled_rate).toFixed(1)}%</div></div>
   <div class="mc" style="border-left-color:var(--purple)"><div class="mc-l">부외재고(별도관리)</div><div class="mc-v" style="color:var(--purple)">${wonShort(DATA.offbook.total_detail)}</div><div class="mc-s">LOT 단위 · ${DATA.offbook.items.length}건</div></div>
 `;
-document.getElementById('itemsTotalCnt').textContent = DATA.items.length;
+// 전사 합계/통합 재활용률 - 고정값 대신 계산(불용재고 재활용 + 부외재고 사용) / (불용재고 + 부외재고)
+const OFF_USED = DATA.offbook.by_grade['사용']||0;
+const COMB_TOTAL = k.total + DATA.offbook.total_detail;
+const COMB_RECYCLED = k.recycled + OFF_USED;
+const COMB_RATE = (COMB_RECYCLED/COMB_TOTAL*100).toFixed(2);
 document.getElementById('combinedInfo').innerHTML =
-  `불용재고(${won(k.total)})는 자산으로 계상되어 통합구매팀이 처분·재활용을 관리하고, 부외재고(${won(DATA.offbook.total_detail)})는 별도 회계 처리된 재고로 관리 주체와 절차가 다릅니다.<br>
-  전사 합계 = 불용재고 <b>${won(k.total)}</b> + 부외재고 <b>${won(DATA.offbook.total_detail)}</b> = <b>${won(DATA.combined.total)}</b> · 통합 재활용률 <b>${DATA.combined.rate}%</b> — 상세 비교는 "불용재고 · 부외재고" 탭 참조.`;
+  `불용재고(${won(k.total)})는 자산으로 계상되어 통합구매팀이 처분/재활용을 관리하고, 부외재고(${won(DATA.offbook.total_detail)})는 별도 회계 처리된 재고로 관리 주체와 절차가 다릅니다.<br>
+  전사 합계 = 불용재고 <b>${won(k.total)}</b> + 부외재고 <b>${won(DATA.offbook.total_detail)}</b> = <b>${won(COMB_TOTAL)}</b> / 통합 재활용률 <b>${COMB_RATE}%</b>(불용재고 재활용 + 부외재고 사용 기준) - 상세 비교는 "불용재고 · 부외재고" 탭 참조.`;
 
-barList('ovProdCause', DATA.prod_cause.slice(0,4).map(c=>({name:c.name,amount:c.amount,count:c.count})), ()=>COLORS.blueM, DATA.type_amt['제품']);
-barList('ovStockCause', DATA.stock_cause.slice(0,4).map(c=>({name:c.name,amount:c.amount,count:c.count})), ()=>COLORS.navy, DATA.stocktype_amt['STOCK']);
+// 발생원인 개요 - 금액 큰 순 상위 4개
+const PROD_CAUSE_SORTED = [...DATA.prod_cause].sort((a,b)=>b.amount-a.amount);
+const STOCK_CAUSE_SORTED = [...DATA.stock_cause].sort((a,b)=>b.amount-a.amount);
+barList('ovProdCause', PROD_CAUSE_SORTED.slice(0,4).map(c=>({name:c.name,amount:c.amount,count:c.count})), ()=>COLORS.blueM, DATA.type_amt['제품']);
+barList('ovStockCause', STOCK_CAUSE_SORTED.slice(0,4).map(c=>({name:c.name,amount:c.amount,count:c.count})), ()=>COLORS.navy, DATA.stocktype_amt['STOCK']);
 
 // ---- 보고 요지 ----
 document.getElementById('askText').innerHTML = `
@@ -1218,15 +1282,26 @@ document.getElementById('askText').innerHTML = `
     <li>유관부서(영업·설계·구매·생산·물류·품질) 사전검토 프로세스</li>
   </ol>`;
 
-// ---- 개선방향 및 다음 단계 ----
-const topProdCause = DATA.prod_cause[0], topStockCause = DATA.stock_cause[0];
-document.getElementById('actionPlan').innerHTML = `
+// ---- 개선방향 및 다음 단계 (금액 큰 순 원인 기준 자동 산출, 사전검토 진행은 트래커 실시간 반영) ----
+function renderActionPlan(rv){
+  const p1 = PROD_CAUSE_SORTED[0], s1 = STOCK_CAUSE_SORTED[0];
+  const prodTot = DATA.type_amt['제품'], stockTot = DATA.stocktype_amt['STOCK'];
+  const top3 = PROD_CAUSE_SORTED.slice(0,3);
+  const top3pct = (top3.reduce((s,c)=>s+c.amount,0)/prodTot*100).toFixed(1);
+  const urgentN = (DATA.grades.find(g=>g.name==='즉시처분(최우선)')||{count:0}).count;
+  const excN = (DATA.grades.find(g=>g.name==='재검토(예외)')||{count:0}).count;
+  const rvTxt = rv
+    ? `사전검토 대상 ${rv.total}건 중 합의완료 ${rv.done}건, 검토중 ${rv.ing}건, 검토요청(미착수) ${rv.req}건입니다(품목현황 / 사전검토 탭 실시간 반영).`
+    : '사전검토 진행 현황을 불러오는 중입니다.';
+  document.getElementById('actionPlan').innerHTML = `
   <ul style="padding-left:18px;font-size:12.5px;color:var(--text2);line-height:1.9">
-    <li><b>제품(외부요인 대응)</b> — "${topProdCause.name}" 등 선주·조선소 사정에 의한 취소가 큰 비중을 차지합니다. 계약 단계 취소조건·보상조항 강화는 영업·계약 부서와 협의가 필요한 사안입니다.</li>
-    <li><b>원재료 STOCK(내부요인 개선)</b> — "${topStockCause.name}"이(가) STOCK 발생액의 ${(topStockCause.amount/DATA.stocktype_amt['STOCK']*100).toFixed(1)}%를 차지합니다. 자체생산 전환(공정변경) 및 사용계획 변경 시 기존 재고 영향을 사전 검토하는 절차는 설계·구매팀과 협의가 필요한 사안입니다.</li>
-    <li><b>처분 관리</b> — 즉시처분(최우선) ${DATA.grades.find(g=>g.name==='즉시처분(최우선)').count}건은 순차 처리 중이며, 재검토(예외) 32건은 개별 사유를 확인 중입니다.</li>
-    <li><b>현재 진행상황</b> — 사전검토·이력관리 트래커를 유관부서와 함께 운영 중이며, 향후 보고방향과 관리프로세스는 오늘 말씀 주시는 코멘트를 반영해 검토할 예정입니다.</li>
+    <li><b>제품(외부요인 대응)</b> - 최다 원인은 "${p1.name}"(${(p1.amount/prodTot*100).toFixed(1)}%)이며, 상위 3개 원인(${top3.map(c=>'"'+c.name+'"').join(', ')})이 제품 발생액의 ${top3pct}%를 차지합니다. 계약 단계 취소조건/보상조항 강화는 영업/계약 부서와 협의가 필요한 사안입니다.</li>
+    <li><b>원재료 STOCK(내부요인 개선)</b> - 최다 원인은 "${s1.name}"(STOCK 발생액의 ${(s1.amount/stockTot*100).toFixed(1)}%)입니다. 자체생산 전환(공정변경) 및 사용계획 변경 시 기존 재고 영향을 사전 검토하는 절차는 설계/구매팀과 협의가 필요한 사안입니다.</li>
+    <li><b>처분 관리</b> - 즉시처분(최우선) ${urgentN}건, 재검토(예외) ${excN}건의 품목별 사유와 검토 결과는 등급/처분관리 탭과 품목현황/사전검토 탭에서 관리합니다.</li>
+    <li><b>사전검토 진행</b> - ${rvTxt}</li>
   </ul>`;
+}
+renderActionPlan(null);
 
 // ---- 데이터 검증 상태 체크리스트 (팀 공유 저장) ----
 const VERIFY_ITEMS = [
@@ -1422,6 +1497,8 @@ renderCollapsibleBars('prodCauseBars', prodCauseSorted.map(c=>({name:c.name,amou
 }, DATA.type_amt['제품'], 3);
 (function(){
   const stockRows = [...DATA.stock_cause].sort((a,b)=>b.amount-a.amount);
+  const stTop = document.getElementById('stockCauseTop');
+  if(stTop && stockRows.length) stTop.textContent = `${stockRows[0].name} ${(stockRows[0].amount/DATA.stocktype_amt['STOCK']*100).toFixed(1)}%로 최다`;
   const max = Math.max(...stockRows.map(x=>x.amount));
   const stockTotal = DATA.stocktype_amt['STOCK'];
   const rowHtml = c => {
@@ -1502,18 +1579,9 @@ document.getElementById('urgentTbl').innerHTML = urgent.map(urgentTblRow).join('
 const disp = DATA.items.filter(i=>i.priorityGrade==='즉시처분(최우선)'||i.priorityGrade==='처분예정').sort((a,b)=>b.amount-a.amount);
 const review = DATA.items.filter(i=>i.bucket==='사용검토').sort((a,b)=>b.amount-a.amount);
 const etc = DATA.items.filter(i=>i.bucket==='기타(보관중)');
-// 처분관리 목록과 사용검토 목록에 동시에 해당하는 품목은 "처분관리" 목록에만 카드로 표시(동일 카드 이중 노출 방지)
-const dispUids = new Set(disp.map(i=>i.uid));
-const reviewOnly = review.filter(i=>!dispUids.has(i.uid));
-const reviewDupCnt = review.length - reviewOnly.length;
-document.getElementById('issueMeta').innerHTML = `
-  <div class="card"><div class="card-ph ph-disp">즉시처분·처분예정</div><div class="card-title">${wonShort(disp.reduce((s,i)=>s+i.amount,0))}</div><ul><li>${disp.length}건 · 4년차(처분대상) 등급</li></ul></div>
-  <div class="card"><div class="card-ph ph-review">사용검토 중</div><div class="card-title">${wonShort(review.reduce((s,i)=>s+i.amount,0))}</div><ul><li>${review.length}건 · 타호선 사용 검토 진행중</li></ul></div>
-  <div class="card"><div class="card-ph ph-etc">기타(미분류)</div><div class="card-title">${wonShort(etc.reduce((s,i)=>s+i.amount,0))}</div><ul><li>${etc.length}건 · 비고 미기재</li></ul></div>
-`;
-document.getElementById('dispCnt').textContent = `전체 ${DATA.items.length}건 중 ${disp.length}건 (${(disp.length/DATA.items.length*100).toFixed(1)}%) · ${won(disp.reduce((s,i)=>s+i.amount,0))}`;
-document.getElementById('reviewCnt').textContent = `전체 ${DATA.items.length}건 중 ${review.length}건 (${(review.length/DATA.items.length*100).toFixed(1)}%) · ${won(review.reduce((s,i)=>s+i.amount,0))} — 이 중 ${reviewDupCnt}건은 위 "즉시처분·처분예정" 목록에 함께 표시되어 아래에는 ${reviewOnly.length}건 표시`;
-document.getElementById('etcInfo').textContent = `기타(보관중, 미분류) ${etc.length}건 · ${won(etc.reduce((s,i)=>s+i.amount,0))}은 비고란이 비어있어 우선순위 미정입니다.`;
+// 사전검토 대상 = 처분 우선순위(즉시처분/처분예정) 또는 재고상태(사용검토/처분예정) 품목 + 검토이력이 있는 품목
+function inReviewScope(i){ return dispUidsAll.has(i.uid) || i.bucket==='사용검토' || i.bucket==='처분예정'; }
+const dispUidsAll = new Set(disp.map(i=>i.uid));
 
 let TRACK = {};
 let storageOK = true;
@@ -1668,34 +1736,119 @@ function trackerRow(i){
     </div>
   </div>`;
 }
-function sortForTracker(list){
-  return [...list].sort((a,b)=>{
-    const ta = TRACK[itemKey(a)], tb = TRACK[itemKey(b)];
-    const ha = ta ? 1 : 0, hb = tb ? 1 : 0;
-    if(ha!==hb) return hb-ha; // 실제 검토이력(회의록 반영 등) 있는 품목 우선
-    return b.amount-a.amount;
+// ============ 품목현황 목록(전체 품목) ============
+const BUCKET_ORDER = ['재활용완료','사용검토','처분예정','기타(보관중)'];
+const BUCKET_META = {
+  '재활용완료':{cls:'st-recycled', badge:'done', color:'var(--teal)'},
+  '사용검토':{cls:'st-review', badge:'review', color:'var(--blue)'},
+  '처분예정':{cls:'st-disp', badge:'etc', color:'var(--amber)'},
+  '기타(보관중)':{cls:'st-etc', badge:'grey', color:'var(--grey)'},
+};
+const PROG_ORDER = ['검토요청','검토중','합의완료','대상 아님'];
+const PROG_BADGE = {'검토요청':'grey','검토중':'review','합의완료':'done','대상 아님':''};
+const RESULT_BADGE = {'재활용':'done','처분':'disp','보류':'purple','미정':'grey'};
+const IL = {status:'all', prog:'all', group:'', type:'', grade:'', q:'', histOnly:false, sort:'amount'};
+const IL_OPEN = new Set();
+function progOf(i){
+  const t = TRACK[itemKey(i)];
+  if(t && t.progress) return t.progress;
+  return inReviewScope(i) ? '검토요청' : '대상 아님';
+}
+function reviewItems(){ return DATA.items.filter(i=> inReviewScope(i) || TRACK[itemKey(i)]); }
+function ilBaseFilter(i, skip){
+  const t = TRACK[itemKey(i)];
+  if(skip!=='status' && IL.status!=='all' && i.bucket!==IL.status) return false;
+  if(skip!=='prog' && IL.prog!=='all' && progOf(i)!==IL.prog) return false;
+  if(DEPT_FILTER!=='all' && trackState(i).dept!==DEPT_FILTER) return false;
+  if(IL.group && i.group!==IL.group) return false;
+  if(IL.type && i.type!==IL.type) return false;
+  if(IL.grade && i.priorityGrade!==IL.grade) return false;
+  if(IL.histOnly && !(t && (t.log||[]).length)) return false;
+  if(DELAYED_ONLY){ const a = ageInfo(trackState(i)); if(!(a.cls==='age-warn'||a.cls==='age-late') || !t) return false; }
+  if(IL.q){
+    const hay = `${i.name||''} ${i.model||''} ${i.vendor||''} ${i.vessel||''} ${i.orderNo||''} ${i.note||''} ${t&&t.note||''}`.toLowerCase();
+    if(!hay.includes(IL.q)) return false;
+  }
+  return true;
+}
+function ilSorted(list){
+  const arr = [...list];
+  if(IL.sort==='recent') arr.sort((a,b)=>{
+    const ta = (TRACK[itemKey(a)]||{}).updatedAtISO||'', tb = (TRACK[itemKey(b)]||{}).updatedAtISO||'';
+    return tb.localeCompare(ta) || b.amount-a.amount;
+  });
+  else if(IL.sort==='year') arr.sort((a,b)=>(b.yearN||0)-(a.yearN||0) || b.amount-a.amount);
+  else if(IL.sort==='status') arr.sort((a,b)=>BUCKET_ORDER.indexOf(a.bucket)-BUCKET_ORDER.indexOf(b.bucket) || b.amount-a.amount);
+  else arr.sort((a,b)=>b.amount-a.amount);
+  return arr;
+}
+function ilChip(kind, val, label, list, dot){
+  const amt = list.reduce((s,i)=>s+i.amount,0);
+  const on = IL[kind]===val ? ' on' : '';
+  return `<button type="button" class="il-chip${on}" data-il-kind="${kind}" data-il-val="${val}">${dot?`<span class="il-dot" style="background:${dot}"></span>`:''}${label} <b>${list.length}</b><span class="il-chip-amt">${won(amt)}</span></button>`;
+}
+function renderChips(){
+  const baseS = DATA.items.filter(i=>ilBaseFilter(i,'status'));
+  document.getElementById('ilChipsStatus').innerHTML =
+    ilChip('status','all','전체', baseS) +
+    BUCKET_ORDER.map(b=>ilChip('status', b, b, baseS.filter(i=>i.bucket===b), BUCKET_META[b].color)).join('');
+  const baseP = DATA.items.filter(i=>ilBaseFilter(i,'prog'));
+  document.getElementById('ilChipsProg').innerHTML =
+    ilChip('prog','all','전체', baseP) +
+    PROG_ORDER.map(p=>ilChip('prog', p, p, baseP.filter(i=>progOf(i)===p))).join('');
+  document.querySelectorAll('[data-il-kind]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ IL[btn.getAttribute('data-il-kind')] = btn.getAttribute('data-il-val'); renderItemList(); });
   });
 }
-function filteredTrackerList(list){
-  let l = list;
-  if(DEPT_FILTER!=='all') l = l.filter(i=> trackState(i).dept === DEPT_FILTER);
-  if(DELAYED_ONLY) l = l.filter(i=>{ const a = ageInfo(trackState(i)); return a.cls==='age-warn'||a.cls==='age-late'; });
-  return l;
+function lastCell(i){
+  const t = TRACK[itemKey(i)];
+  if(!t || !t.updatedAtISO) return '<span style="color:var(--text3)">-</span>';
+  const age = ageInfo(t);
+  const n = (t.log||[]).length;
+  return `${t.updatedAtISO.slice(0,10)}<small>${t.lastEditor||''}</small><span class="age-badge ${age.cls}" style="margin-left:0">${age.label}</span>${n?` <span class="il-hist">이력 ${n}건</span>`:''}`;
 }
-function renderFilterSummary(dispTotal, dispShown, reviewTotal, reviewShown){
-  const el = document.getElementById('filterSummary');
-  if(!el) return;
-  if(DEPT_FILTER==='all' && !DELAYED_ONLY){ el.textContent = ''; return; }
-  el.textContent = `필터 적용중 — 처분관리 ${dispShown}/${dispTotal}건, 사용검토 ${reviewShown}/${reviewTotal}건 표시`;
+function ilRow(i){
+  const key = itemKey(i);
+  const t = TRACK[key];
+  const st = trackState(i);
+  const bm = BUCKET_META[i.bucket] || BUCKET_META['기타(보관중)'];
+  const prog = progOf(i);
+  const open = IL_OPEN.has(key);
+  const res = t && t.result ? `<span class="badge ${RESULT_BADGE[t.result]||'grey'}">${t.result}</span>` : '<span style="color:var(--text3)">-</span>';
+  const progHtml = PROG_BADGE[prog] ? `<span class="badge ${PROG_BADGE[prog]}">${prog}</span>` : `<span style="color:var(--text3);font-size:12px">${prog}</span>`;
+  const row = `<tr class="il-row ${bm.cls}${open?' open':''}" data-il-key="${key}">
+    <td><span class="il-caret">${open?'▾':'▸'}</span><span class="badge ${bm.badge}">${i.bucket}</span></td>
+    <td>${progHtml}</td>
+    <td>${res}</td>
+    <td>${t? st.dept : (prog==='대상 아님'?'-':st.dept)}</td>
+    <td>${i.group||''}<small style="display:block;color:var(--text3);font-size:11.5px">${i.type||''}</small></td>
+    <td class="il-name">${i.name||''}${i.model?`<small>${i.model}</small>`:''}</td>
+    <td class="il-vendor">${i.vendor||'-'}${i.vessel?`<small>${i.vessel}</small>`:''}</td>
+    <td style="font-family:var(--mono);font-size:12px">${i.orderNo||'-'}</td>
+    <td>${i.yearN!=null? i.yearN+'년차':''}</td>
+    <td><span class="badge ${gradeBadgeClass(i.priorityGrade)}">${i.priorityGrade}</span></td>
+    <td class="amt">${won(i.amount||0)}</td>
+    <td class="il-last">${lastCell(i)}</td>
+  </tr>`;
+  return open ? row + `<tr class="il-detail"><td class="il-detail-cell" colspan="12">${trackerRow(i)}</td></tr>` : row;
+}
+function renderItemList(){
+  renderChips();
+  const list = ilSorted(DATA.items.filter(i=>ilBaseFilter(i)));
+  const body = document.getElementById('ilBody');
+  body.innerHTML = list.length ? list.map(ilRow).join('') : `<tr><td colspan="12" class="il-empty">조건에 해당하는 품목이 없습니다.</td></tr>`;
+  const amt = list.reduce((s,i)=>s+i.amount,0);
+  document.getElementById('ilSummary').textContent = `표시 ${list.length}건 / 전체 ${DATA.items.length}건 - 금액 ${won(amt)}`;
+  body.querySelectorAll('tr.il-row').forEach(tr=>{
+    tr.addEventListener('click', ()=>{
+      const key = tr.getAttribute('data-il-key');
+      if(IL_OPEN.has(key)) IL_OPEN.delete(key); else IL_OPEN.add(key);
+      renderTrackers();
+    });
+  });
 }
 function renderTrackers(){
-  const dispSorted = sortForTracker(disp);
-  const reviewSorted = sortForTracker(reviewOnly);
-  const dispF = filteredTrackerList(dispSorted);
-  const reviewF = filteredTrackerList(reviewSorted);
-  document.getElementById('dispTracker').innerHTML = dispF.map(trackerRow).join('');
-  document.getElementById('reviewTracker').innerHTML = reviewF.map(trackerRow).join('');
-  renderFilterSummary(dispSorted.length, dispF.length, reviewSorted.length, reviewF.length);
+  renderItemList();
   renderKanban();
   renderThroughput();
   renderDeptStats();
@@ -1706,7 +1859,7 @@ function renderTrackers(){
 function renderDeptStats(){
   const el = document.getElementById('deptStats');
   if(!el) return;
-  const all = [...new Map(disp.concat(review).map(i=>[itemKey(i), i])).values()];
+  const all = reviewItems();
   const stats = {};
   DEPTS.forEach(d=> stats[d] = {검토요청:0, 검토중:0, 합의완료:0, amount:0});
   all.forEach(i=>{
@@ -1724,7 +1877,7 @@ function renderDeptStats(){
 function renderConsistencyCheck(){
   const el = document.getElementById('consistencyCheck');
   if(!el) return;
-  const all = [...new Map(disp.concat(review).map(i=>[itemKey(i), i])).values()];
+  const all = reviewItems();
   const mismatched = all.filter(i=>{
     const t = trackState(i);
     return t.result === '재활용' && i.grade !== '사용';
@@ -1741,27 +1894,28 @@ function renderConsistencyCheck(){
   }
 }
 function exportTrackerCSV(){
-  const all = [...new Map(disp.concat(review).map(i=>[itemKey(i), i])).values()];
-  const rows = [['구분','품목그룹','품목명','호선','수주번호','금액','담당부서','진행현황','결과','검토의견','최종수정일시','최종수정자']];
-  all.forEach(i=>{
-    const t = trackState(i);
-    rows.push([i.priorityGrade||'', i.group||'', i.name||'', i.vessel||'', i.orderNo||'', i.amount||0, t.dept||'', t.progress||'', t.result||'', (t.note||'').replace(/\n/g,' '), t.updatedAt||'', t.lastEditor||'']);
+  const list = ilSorted(DATA.items.filter(i=>ilBaseFilter(i)));
+  const rows = [['재고상태','검토진행','결과','담당부서','제품군','유형','구분','품명','모델','거래처','호선','수주번호','년차','등급','금액','비고','검토의견','최종수정일시','최종수정자']];
+  list.forEach(i=>{
+    const t = TRACK[itemKey(i)];
+    const st = trackState(i);
+    rows.push([i.bucket||'', progOf(i), t?t.result||'':'', st.dept||'', i.group||'', i.type||'', i.stockType==='STOCK'?'STOCK(상시재고)':'호선용(PJT)', i.name||'', i.model||'', i.vendor||'', i.vessel||'', i.orderNo||'', i.yearN!=null?i.yearN:'', i.priorityGrade||'', Math.round(i.amount||0), (i.note||'').replace(/\n/g,' '), t?(t.note||'').replace(/\n/g,' '):'', t?t.updatedAt||'':'', t?t.lastEditor||'':'']);
   });
   const csv = rows.map(r=>r.map(v=>{
     const s = String(v==null?'':v);
     return /["\n,]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
   }).join(',')).join('\r\n');
-  const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8;'});
+  const blob = new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = `불용재고_사전검토이력_${new Date().toISOString().slice(0,10)}.csv`;
+  a.href = url; a.download = `불용재고 품목현황 사전검토 ${new Date().toISOString().slice(0,10)}.csv`;
   document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
 }
 
 // ---- 칸반보드 ----
 function renderKanban(){
-  const all = [...new Map(disp.concat(review).map(i=>[itemKey(i), i])).values()];
+  const all = reviewItems();
   const cols = {'검토요청':[], '검토중':[], '합의완료':[]};
   all.forEach(i=>{ const t = trackState(i); (cols[t.progress]||cols['검토요청']).push(i); });
   const meta = {'검토요청':{cls:'kb-req'}, '검토중':{cls:'kb-ing'}, '합의완료':{cls:'kb-done'}};
@@ -1779,13 +1933,14 @@ function renderKanban(){
   const now = new Date();
   const ym = `${now.getFullYear()}년 ${now.getMonth()+1}월`;
   const doneCnt = cols['합의완료'].length, ingCnt = cols['검토중'].length;
+  renderActionPlan({total:all.length, done:doneCnt, ing:ingCnt, req:cols['검토요청'].length});
   document.getElementById('cycleNote').innerHTML =
     `<b>${ym} 사전검토 사이클</b> — 대상 ${all.length}건 중 검토중 ${ingCnt}건 · 합의완료 ${doneCnt}건 (착수 전 ${cols['검토요청'].length}건). 유관부서가 매월 순차적으로 검토·회신하는 진행형 프로세스이며, 이 화면은 담당자가 갱신할 때마다 실시간 반영됩니다.`;
 }
 
 // ---- 월별 처리 실적 ----
 function renderThroughput(){
-  const all = [...new Map(disp.concat(review).map(i=>[itemKey(i), i])).values()];
+  const all = reviewItems();
   const byMonth = {};
   all.forEach(i=>{
     const t = trackState(i);
@@ -1887,6 +2042,19 @@ function attachTrackerEvents(){
   if(sel) sel.addEventListener('change', e=>{ DEPT_FILTER = e.target.value; renderTrackers(); });
   if(chk) chk.addEventListener('change', e=>{ DELAYED_ONLY = e.target.checked; renderTrackers(); });
   if(btn) btn.addEventListener('click', exportTrackerCSV);
+  const fill = (id, vals)=>{ const el=document.getElementById(id); vals.forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; el.appendChild(o); }); };
+  const uq = arr=>[...new Set(arr)].filter(Boolean);
+  fill('ilGroup', uq(DATA.items.map(i=>i.group)));
+  fill('ilType', uq(DATA.items.map(i=>i.type)));
+  fill('ilGrade', ['즉시처분(최우선)','처분예정','재검토(예외)','우선모니터링(고액)','일반관리'].filter(g=>DATA.items.some(i=>i.priorityGrade===g)));
+  document.getElementById('ilGroup').addEventListener('change', e=>{ IL.group=e.target.value; renderTrackers(); });
+  document.getElementById('ilType').addEventListener('change', e=>{ IL.type=e.target.value; renderTrackers(); });
+  document.getElementById('ilGrade').addEventListener('change', e=>{ IL.grade=e.target.value; renderTrackers(); });
+  document.getElementById('ilSort').addEventListener('change', e=>{ IL.sort=e.target.value; renderTrackers(); });
+  document.getElementById('ilHistOnly').addEventListener('change', e=>{ IL.histOnly=e.target.checked; renderTrackers(); });
+  let qT=null;
+  document.getElementById('ilSearch').addEventListener('input', e=>{ clearTimeout(qT); qT=setTimeout(()=>{ IL.q=e.target.value.trim().toLowerCase(); renderTrackers(); }, 200); });
+  document.getElementById('ilCollapseAll').addEventListener('click', ()=>{ IL_OPEN.clear(); renderTrackers(); });
 })();
 loadTracker();
 
@@ -1987,7 +2155,7 @@ function rankRows(list, valFn, labelFn, subFn, color){
 })();
 
 // ============ Off-book & compare ============
-const off = DATA.offbook, comb = DATA.combined;
+const off = DATA.offbook, comb = {total: COMB_TOTAL, rate: COMB_RATE};
 const offRecycled = off.by_grade['사용']||0, offRemain = off.by_grade['보관']||0;
 document.getElementById('compareTbl').innerHTML = `
   <div class="cmp-card" style="border-left:4px solid var(--navy)">
@@ -2034,37 +2202,7 @@ document.getElementById('offTbl').innerHTML = off.items.map(i=>`
   <tr><td>${i.name||''}</td><td>${i.spec||''}</td><td class="amt">${won(i.amount||0)}</td>
   <td>${i.grade||''}</td><td>${i.warehouse||''}</td><td>${i.rack||''}</td><td>${i.created||''}</td></tr>`).join('');
 
-// ============ Items table ============
-const items = DATA.items;
-function uniq(arr){ return [...new Set(arr)].filter(Boolean); }
-function fillSelect(id, values){ const el=document.getElementById(id); values.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o);}); }
-fillSelect('fGroup', uniq(items.map(i=>i.group)));
-fillSelect('fType', uniq(items.map(i=>i.type)));
-fillSelect('fGrade', uniq(items.map(i=>i.priorityGrade)));
-document.getElementById('fStockType').innerHTML += `<option value="STOCK">STOCK(상시재고)</option><option value="PJT">호선용(PJT)</option>`;
-function stockTypeLabel(s){ return s==='STOCK'?'STOCK(상시재고)':'호선용(PJT)'; }
 function gradeBadgeClass(g){ const map={'즉시처분(최우선)':'disp','처분예정':'etc','재검토(예외)':'purple','우선모니터링(고액)':'review','일반관리':'grey'}; return map[g]||'grey'; }
-function renderTable(){
-  const g=document.getElementById('fGroup').value, t=document.getElementById('fType').value,
-        st=document.getElementById('fStockType').value, gr=document.getElementById('fGrade').value;
-  const q=document.getElementById('fSearch').value.trim().toLowerCase();
-  const rows = items.filter(i=>{
-    if(g && i.group!==g) return false;
-    if(t && i.type!==t) return false;
-    if(st && i.stockType!==st) return false;
-    if(gr && i.priorityGrade!==gr) return false;
-    if(q){ const hay=`${i.name||''} ${i.vendor||''} ${i.model||''}`.toLowerCase(); if(!hay.includes(q)) return false; }
-    return true;
-  });
-  document.getElementById('tblBody').innerHTML = rows.map(i=>`
-    <tr><td>${i.group||''}</td><td>${i.type||''}</td><td>${stockTypeLabel(i.stockType)}</td><td>${i.name||''}</td><td>${i.model||''}</td>
-    <td>${i.vendor||''}</td><td>${i.vessel||'-'}</td><td style="font-family:var(--mono);font-size:12px">${i.orderNo||'-'}</td><td class="amt">${won(i.amount||0)}</td><td>${i.yearN!=null? i.yearN+'년차':''}</td>
-    <td><span class="badge ${gradeBadgeClass(i.priorityGrade)}">${i.priorityGrade}</span></td>
-    <td style="font-size:12px;color:var(--text2)">${i.note||i.causeCat||''}</td></tr>`).join('');
-}
-['fGroup','fType','fStockType','fGrade'].forEach(id=>document.getElementById(id).addEventListener('change', renderTable));
-document.getElementById('fSearch').addEventListener('input', renderTable);
-renderTable();
 initCollapsibleSections();
 </script>
 </body>
