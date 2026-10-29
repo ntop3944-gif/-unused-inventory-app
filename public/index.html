@@ -436,6 +436,48 @@ table.il-tbl td.il-detail-cell .tk-card{margin-bottom:6px}
   .mc-v{white-space:nowrap;font-size:16px}
   table.rt td.amt,table.rt th.amt{white-space:nowrap !important;word-break:keep-all !important}
 }
+
+/* ===== 분류 버튼 시인성 개선(2026-10-29) ===== */
+.il-filterbox{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.il-filterhead{display:flex;justify-content:flex-end;margin-bottom:-2px}
+.il-chips{display:flex;align-items:center;gap:12px;margin:0;padding:7px 10px;background:var(--bg);border:1px solid var(--surface2);border-radius:10px}
+.il-chip-lbl{font-size:12.3px;font-weight:800;color:var(--navy);min-width:62px;padding:0;border-right:2px solid var(--border2);margin-right:2px}
+.il-chip-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.il-chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;padding:4px 12px;border-radius:99px;border:1.5px solid var(--border2);background:#fff;color:var(--text2);cursor:pointer;white-space:nowrap;font-family:var(--font);transition:background .12s,border-color .12s}
+.il-chip:hover{border-color:var(--navy)}
+.il-chip b{font-family:var(--mono);color:var(--text);font-weight:700}
+.il-chip .il-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0}
+.il-chip.il-chip-all{margin-right:10px}
+.il-chip.on{background:var(--chip-c,var(--navy));border-color:var(--chip-c,var(--navy));color:#fff}
+.il-chip.on b{color:#fff}
+.il-chip.on .il-dot{background:#fff !important}
+.il-chip.zero{opacity:.45}
+.il-selbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:9px 12px;border-radius:10px;background:var(--blue-l);font-size:13px;color:var(--navy);margin-top:2px}
+.il-selbar .il-sel-path{font-weight:700}
+.il-selbar .il-sel-num{font-family:var(--mono);font-weight:700}
+.il-selbar button{margin-left:auto;font-size:12px;padding:4px 11px;border-radius:7px;border:1px solid var(--navy);background:#fff;color:var(--navy);cursor:pointer}
+.il-defbox{font-size:12.3px}
+.il-defbox>summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:5px;font-size:12.3px;font-weight:700;color:var(--blue);padding:4px 10px;border:1px solid var(--blue);border-radius:7px;background:#fff}
+.il-defbox>summary::-webkit-details-marker{display:none}
+.il-defbox[open]>summary{background:var(--blue);color:#fff}
+.il-defbox[open]{margin-bottom:8px;width:100%}
+.il-filterhead:has(.il-defbox[open]){justify-content:flex-start}
+.il-defgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.il-defcol{border:1px solid var(--surface2);border-radius:10px;padding:10px 12px;background:#fff}
+.il-defcol h4{font-size:12.5px;color:var(--navy);margin:0 0 6px}
+.il-defcol dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 8px;font-size:12px;line-height:1.5}
+.il-defcol dt{font-weight:700;color:var(--text);white-space:nowrap;display:flex;align-items:flex-start;gap:5px}
+.il-defcol dt i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-top:5px}
+.il-defcol dd{margin:0;color:var(--text2)}
+@media (max-width:900px){ .il-defgrid{grid-template-columns:1fr} .il-chips{flex-direction:column;align-items:flex-start} .il-chip-lbl{border-right:none} }
+@media print{
+  .il-chips,.il-filterhead,.il-selbar button{display:none !important}
+  .il-defbox:not([open]){display:none !important}
+  .il-defbox>summary{display:none !important}
+  .il-defgrid{grid-template-columns:repeat(3,1fr)}
+  .il-defcol dl{font-size:8.5px}
+  .il-selbar{font-size:10px;padding:5px 8px}
+}
 .login-mask{position:fixed;inset:0;background:rgba(18,40,58,.6);display:flex;align-items:center;justify-content:center;z-index:100}
 .login-mask.hide{display:none}
 .login-box{background:var(--surface);border-radius:var(--radius);padding:28px 26px;width:320px;box-shadow:0 10px 40px rgba(18,40,58,.28)}
@@ -732,12 +774,18 @@ body.locked .topbar, body.locked .main{display:none}
   <div class="sec" id="secItemList">
     <div class="sec-t">품목 현황 목록 <span class="sec-tag" id="ilSummary"></span></div>
     <div class="card il-card">
-      <div class="il-chips"><span class="il-chip-lbl">재고상태</span><div class="il-chip-row" id="ilChipsStatus"></div></div>
-      <div class="il-def"><b>재활용완료</b> 타호선/타용도 사용으로 재활용 실적에 반영된 품목 / <b>사용검토</b> 타호선 사용 검토 대상 품목 / <b>처분예정</b> 보관기간 유예 등 처분 예정으로 분류된 품목 / <b>기타(보관중)</b> 비고 미기재로 분류 전인 품목</div>
-      <div class="il-chips"><span class="il-chip-lbl">우선순위</span><div class="il-chip-row" id="ilChipsGrade"></div></div>
-      <div class="il-def"><b>즉시처분(최우선)</b> 보관 4년차(처분 기준 도래) + 금액 상위 20% / <b>처분예정</b> 보관 4년차(처분 기준 도래) 등 처분 대상 / <b>재검토(예외)</b> 보관 5년차 이상, 경영진 코멘트에 따라 재검토 / <b>우선모니터링(고액)</b> 4년차 미만 중 금액 상위 20% / <b>일반관리</b> 그 외 품목(산정 기준은 등급/처분관리 탭 참조)</div>
-      <div class="il-chips"><span class="il-chip-lbl">검토진행</span><div class="il-chip-row" id="ilChipsProg"></div></div>
-      <div class="il-def"><b>미착수</b> 사전검토 대상이지만 검토의견 입력 이력이 없는 품목 / <b>검토중</b> 담당부서가 검토의견을 입력했으나 결과가 확정되지 않은 품목 / <b>합의완료</b> 유관부서 합의로 결과(재활용/처분/보류)가 확정된 품목 / <b>대상 아님</b> 재활용완료 또는 기타(보관중)로 사전검토 대상에서 제외된 품목</div>
+      <div class="il-filterhead">
+        <details class="il-defbox" id="ilDefBox">
+          <summary>ⓘ 구분 기준 보기</summary>
+          <div class="il-defgrid" id="ilDefGrid"></div>
+        </details>
+      </div>
+      <div class="il-filterbox">
+        <div class="il-chips"><span class="il-chip-lbl">재고상태</span><div class="il-chip-row" id="ilChipsStatus"></div></div>
+        <div class="il-chips"><span class="il-chip-lbl">우선순위</span><div class="il-chip-row" id="ilChipsGrade"></div></div>
+        <div class="il-chips"><span class="il-chip-lbl">검토진행</span><div class="il-chip-row" id="ilChipsProg"></div></div>
+        <div class="il-selbar" id="ilSelBar"></div>
+      </div>
       <div class="il-controls">
         <select id="deptFilterSel" title="담당부서">
           <option value="all">담당부서 전체</option>
@@ -767,7 +815,7 @@ body.locked .topbar, body.locked .main{display:none}
         <span><i style="background:var(--blue)"></i>사용검토</span>
         <span><i style="background:var(--amber)"></i>처분예정</span>
         <span><i style="background:var(--grey)"></i>기타(보관중)</span>
-        <span>행 왼쪽 색 띠 = 재고상태 / "이력 n건" = 사전검토 이력 건수 / 행을 누르면 상세 카드 펼침 / "이번 달 미검토" = 사전검토 대상 중 이번 달 검토 저장 이력이 없는 품목</span>
+        <span>행 왼쪽 색 = 재고상태 / 행을 누르면 입력 카드가 펼쳐집니다</span>
       </div>
       <div class="table-scroll il-scroll"><table class="rt il-tbl">
         <colgroup>
@@ -1850,20 +1898,80 @@ function ilSorted(list){
   else arr.sort((a,b)=>b.amount-a.amount);
   return arr;
 }
-function ilChip(kind, val, label, list, dot){
+// 구분 정의(버튼 마우스오버 / "구분 기준 보기"에 표시)
+const IL_DEF = {
+  status:{title:'재고상태', items:{
+    '재활용완료':'타호선/타용도 사용으로 재활용 실적에 반영된 품목',
+    '사용검토':'타호선 사용 검토 대상 품목',
+    '처분예정':'보관기간 유예 등 처분 예정으로 분류된 품목',
+    '기타(보관중)':'비고 미기재로 분류 전인 품목'}},
+  grade:{title:'우선순위', items:{
+    '즉시처분(최우선)':'보관 4년차(처분 기준 도래) + 금액 상위 20%',
+    '처분예정':'보관 4년차(처분 기준 도래) 등 처분 대상',
+    '재검토(예외)':'보관 5년차 이상, 경영진 코멘트에 따라 재검토',
+    '우선모니터링(고액)':'4년차 미만 중 금액 상위 20%',
+    '일반관리':'그 외 품목(산정 기준은 등급/처분관리 탭 참조)'}},
+  prog:{title:'검토진행', items:{
+    '미착수':'사전검토 대상이지만 검토의견 입력 이력이 없는 품목',
+    '검토중':'검토의견을 입력했으나 결과가 확정되지 않은 품목',
+    '합의완료':'유관부서 합의로 결과(재활용/처분/보류)가 확정된 품목',
+    '대상 아님':'재활용완료 또는 기타(보관중)로 사전검토 대상에서 제외된 품목'}},
+};
+const PROG_DOT = {'미착수':'var(--grey)','검토중':'var(--blue)','합의완료':'var(--teal)','대상 아님':'#9aa3ae'};
+function chipColor(kind, val){
+  if(kind==='status') return (BUCKET_META[val]||{}).color;
+  if(kind==='grade') return GRADE_DOT[val];
+  if(kind==='prog') return PROG_DOT[val];
+  return null;
+}
+function ilChip(kind, val, label, list){
   const amt = list.reduce((s,i)=>s+i.amount,0);
   const on = IL[kind]===val ? ' on' : '';
-  return `<button type="button" class="il-chip${on}" data-il-kind="${kind}" data-il-val="${val}">${dot?`<span class="il-dot" style="background:${dot}"></span>`:''}${label} <b>${list.length}</b><span class="il-chip-amt">${won(amt)}</span></button>`;
+  const all = val==='all';
+  const color = all ? null : chipColor(kind, val);
+  const def = all ? '' : ((IL_DEF[kind]||{items:{}}).items[val]||'');
+  const tip = `${label} ${list.length}건 / ${won(amt)}${def?'\n'+def:''}`;
+  return `<button type="button" class="il-chip${on}${all?' il-chip-all':''}${list.length?'':' zero'}" title="${tip}" style="${color?'--chip-c:'+color:''}" data-il-kind="${kind}" data-il-val="${val}">${color?`<span class="il-dot" style="background:${color}"></span>`:''}${label} <b>${list.length}</b></button>`;
+}
+function renderDefGrid(){
+  const el = document.getElementById('ilDefGrid'); if(!el || el.dataset.done) return;
+  el.innerHTML = ['status','grade','prog'].map(kind=>{
+    const d = IL_DEF[kind];
+    return `<div class="il-defcol"><h4>${d.title}</h4><dl>${Object.entries(d.items).map(([k,v])=>`<dt><i style="background:${chipColor(kind,k)}"></i>${k}</dt><dd>${v}</dd>`).join('')}</dl></div>`;
+  }).join('');
+  el.dataset.done = '1';
+}
+function renderSelBar(list){
+  const el = document.getElementById('ilSelBar'); if(!el) return;
+  const amt = list.reduce((s,i)=>s+i.amount,0);
+  const part = (kind)=> IL[kind]==='all' ? `${IL_DEF[kind].title} 전체` : IL[kind];
+  const extra = [];
+  if(DEPT_FILTER!=='all') extra.push('담당 '+DEPT_FILTER);
+  if(IL.group) extra.push(IL.group);
+  if(IL.type) extra.push(IL.type);
+  if(IL.histOnly) extra.push('검토이력 보유');
+  if(DELAYED_ONLY) extra.push('이번 달 미검토');
+  if(IL.q) extra.push(`검색 "${IL.q}"`);
+  el.innerHTML = `<span>선택</span><span class="il-sel-path">${part('status')} &gt; ${part('grade')} &gt; ${part('prog')}${extra.length?' &gt; '+extra.join(' / '):''}</span>
+    <span class="il-sel-num">${list.length}건 / ${won(amt)}</span><span style="color:var(--text3);font-size:12px">(전체 ${DATA.items.length}건)</span>
+    <button type="button" id="ilResetBtn">선택 초기화</button>`;
+  document.getElementById('ilResetBtn').addEventListener('click', ()=>{
+    IL.status='all'; IL.grade='all'; IL.prog='all'; IL.group=''; IL.type=''; IL.q=''; IL.histOnly=false;
+    DEPT_FILTER='all'; DELAYED_ONLY=false;
+    const set=(id,v)=>{ const x=document.getElementById(id); if(!x) return; if(x.type==='checkbox') x.checked=v; else x.value=v; };
+    set('deptFilterSel','all'); set('ilGroup',''); set('ilType',''); set('ilSearch',''); set('ilHistOnly',false); set('delayedOnlyChk',false);
+    renderTrackers();
+  });
 }
 function renderChips(){
   const baseS = DATA.items.filter(i=>ilBaseFilter(i,'status'));
   document.getElementById('ilChipsStatus').innerHTML =
     ilChip('status','all','전체', baseS) +
-    BUCKET_ORDER.map(b=>ilChip('status', b, b, baseS.filter(i=>i.bucket===b), BUCKET_META[b].color)).join('');
+    BUCKET_ORDER.map(b=>ilChip('status', b, b, baseS.filter(i=>i.bucket===b))).join('');
   const baseG = DATA.items.filter(i=>ilBaseFilter(i,'grade'));
   document.getElementById('ilChipsGrade').innerHTML =
     ilChip('grade','all','전체', baseG) +
-    GRADE_ORDER.map(g=>ilChip('grade', g, g, baseG.filter(i=>i.priorityGrade===g), GRADE_DOT[g])).join('');
+    GRADE_ORDER.map(g=>ilChip('grade', g, g, baseG.filter(i=>i.priorityGrade===g))).join('');
   const baseP = DATA.items.filter(i=>ilBaseFilter(i,'prog'));
   document.getElementById('ilChipsProg').innerHTML =
     ilChip('prog','all','전체', baseP) +
@@ -1911,7 +2019,8 @@ function renderItemList(){
   const body = document.getElementById('ilBody');
   body.innerHTML = list.length ? list.map(ilRow).join('') : `<tr><td colspan="12" class="il-empty">조건에 해당하는 품목이 없습니다.</td></tr>`;
   const amt = list.reduce((s,i)=>s+i.amount,0);
-  document.getElementById('ilSummary').textContent = `표시 ${list.length}건 / 전체 ${DATA.items.length}건 - 금액 ${won(amt)}`;
+  document.getElementById('ilSummary').textContent = `표시 ${list.length}건 / 전체 ${DATA.items.length}건`;
+  renderSelBar(list); renderDefGrid();
   const unrev = DATA.items.filter(i=> inReviewSet(i) && progOf(i)!=='대상 아님' && !reviewedThisMonth(TRACK[itemKey(i)])).length;
   const ul = document.getElementById('ilUnreviewedLbl'); if(ul) ul.textContent = `이번 달(${monthLabel(CURRENT_MONTH)}) 미검토 ${unrev}건`;
   body.querySelectorAll('tr.il-row').forEach(tr=>{
